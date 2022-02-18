@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>login</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/fonts/ionicons.min.css">
+    <link rel="stylesheet" href="assets/css/Login-Form-Clean.css">
+    <link rel="stylesheet" href="assets/css/login_style.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/sha1.js"></script>
+
+</head>
+
+<body class="d-lg-flex flex-grow-0 justify-content-lg-center align-items-lg-center justify-content-xl-start align-items-xl-center">
+    <div class="container d-xl-flex d-xxl-flex justify-content-xl-center align-items-xl-center justify-content-xxl-center align-items-xxl-center login-clean">
+        <form id="login" @submit.prevent="log">
+            <h2 class="visually-hidden">Login Form</h2>
+            <div class="illustration" style="color: #667292;"><i class="icon ion-ios-book"></i>
+                <h2>Ripetizioni</h2>
+            </div>
+            <div class="mb-3"><input class="form-control" v-model="email" type="email" name="email" placeholder="Email"></div>
+            <div class="mb-3"><input class="form-control" v-model="password" type="password" name="password" placeholder="Password"></div>
+            <div class="alert alert-danger" v-if="error">
+                {{ error_message }}
+            </div>
+
+            <!-- Login success -->
+            <div class="alert alert-success" v-if="success">
+                {{ success_message }}
+            </div>
+            <div class="mb-3"><button class="btn btn-primary d-block w-100" type="submit" style="color: #ffffff;background: #667292;border-radius: 10px;">Log In</button></div>
+            <a class="mb-3 guest" @click="asGuest">Continua come ospite</a>
+        </form>
+    </div>
+    <script src="assets/js/login.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+</body>
+
+</html>

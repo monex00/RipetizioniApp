@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>admin</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/admin_style.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+
+<body onload="checkAdminRole()">
+    <nav class="navbar navbar-light navbar-expand-lg navigation-clean">
+        <div class="container"><a class="navbar-brand" href="#">Company Name</a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navcol-1">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="#" >First Item</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Second Item</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Third Item</a></li>
+                    <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">Dropdown </a>
+                        <div class="dropdown-menu"><a class="dropdown-item" href="#tab-1">Docenti</a><a class="dropdown-item" href="#tab-2" data-bs-target="#tab-2">Corsi</a><a class="dropdown-item" href="#tab-3" data-bs-target="#tab-3">Insegnamenti</a><a class="dropdown-item" href="#tab-4" data-bs-target="#tab-3">Prenotazioni</a></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div id="admin_error" style="display: none" class="h-100 row align-items-center admin_error" >
+        <div class="alert alert-danger" >
+             Non sei autorizzato a visualizzare questa pagina.
+        </div>
+        <button onclick="window.location.href='index.html'" class="btn btn-primary" type="button">Torna al login</button>
+    </div>
+
+    <div id="content">
+    <h1>Pannello di amministrazione</h1>
+    <div class="tab_bar_container">
+        <ul id="tabBar" class="nav nav-tabs" role="tablist">
+            <li class="nav-item" id="nav_item1" onclick="selectTabBarItem(this.id)" role="presentation"><a class="nav-link active" role="tab" data-bs-toggle="tab" href="#teacher" style="border-top-left-radius: 15px;border-top-right-radius: 15px;background: #c2d4dd;border-style: none;">Docenti</a></li>
+            <li class="nav-item" id="nav_item2" onclick="selectTabBarItem(this.id)" role="presentation"><a class="nav-link" role="tab" data-bs-toggle="tab" href="#course" style="border-top-left-radius: 15px;border-top-right-radius: 15px;background: #c2d4dd6e;border-style: none;border-bottom-style: none;">Corsi</a></li>
+            <li class="nav-item" id="nav_item3" onclick="selectTabBarItem(this.id)" role="presentation"><a class="nav-link" role="tab" data-bs-toggle="tab" href="#teaching" style="border-top-left-radius: 15px;border-top-right-radius: 15px;background: #c2d4dd6e;border-style: none;">Insegnamenti</a></li>
+            <li class="nav-item" id="nav_item4" onclick="selectTabBarItem(this.id)" role="presentation"><a class="nav-link" role="tab" data-bs-toggle="tab" href="#reservation" style="border-top-left-radius: 15px;border-top-right-radius: 15px;background: #c2d4dd6e;border-style: none;">Prenotazioni</a></li>
+        </ul>
+        <div class="tab-content">
+
+            <!-- TEACHER -->
+            <div class="tab-pane active" role="tabpanel" id="teacher" >
+                <h2>Docente</h2>
+
+                <form @submit.prevent="add" >
+                        <label class="form-label">Nome</label>
+                        <input v-model="addTeacher.name" class="form-control" type="text">
+                        <label class="form-label">Cognome</label>
+                        <input v-model="addTeacher.surname" class="form-control" type="text">
+
+                    <div v-if="addTeacher.show" class="alert alert-primary" >
+                        {{ addTeacher.message }}
+                    </div>
+                    <button class="btn btn-primary" type="submit">Aggiungi</button>
+                </form>
+                <div class="d-xl-flex justify-content-xl-end"><input class="form-control-sm d-xl-flex flex-grow-0 search-box"  id="teacher_input" type="text" onkeyup="filterTable(this.id)" placeholder="Search"></div>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Cognome</th>
+                                <th>Operazione</th>
+                            </tr>
+                        </thead>
+                        <tbody id="teacher_table">
+                            <tr v-for="teacher in getTeacherData.teachers">
+                                <td>{{ teacher.nome }}</td>
+                                <td>{{ teacher.cognome }}</td>
+                                <td class="d-xl-flex align-items-xl-center"><button v-on:click="remove(teacher)" class="btn btn-danger" type="button">Elimina</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div v-if="removeTeacher.show" class="alert alert-primary" >
+                        {{ removeTeacher.message }}
+                    </div>
+
+                    <modal_component modalid="teacherid" ref="childref" :title="modal_title" :message="modal_message" :no="false" :yes="false" :ok="true" :login="false"></modal_component>
+                </div>
+            </div>
+
+            <!-- COURSE -->
+            <div id="course" class="tab-pane" role="tabpanel">
+                <h2>Corsi</h2>
+                <form @submit.prevent="add">
+                    <label class="form-label">Nome</label>
+                    <input v-model="addCourse.name" class="form-control" type="text">
+                    <div v-if="addCourse.show" class="alert alert-primary" >
+                        {{ addCourse.message }}
+                    </div>
+                    <button class="btn btn-primary" type="submit">Aggiungi</button>
+                </form>
+                <div class="d-xl-flex justify-content-xl-end"><input class="form-control-sm d-xl-flex flex-grow-0 search-box" type="text" id="course_input" onkeyup="filterTable(this.id)" placeholder="Search"></div>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Operazione</th>
+                            </tr>
+                        </thead>
+                        <tbody id="course_table">
+                            <tr v-for="course in getCourseData.courses">
+                                <td>{{ course.nome }}</td>
+                                <td class="d-xl-flex align-items-xl-center"><button v-on:click="remove(course)" class="btn btn-danger" type="button">Elimina</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div v-if="removeCourse.show" class="alert alert-primary">
+                        {{ removeCourse.message }}
+                    </div>
+
+                    <modal_component modalid="courseid" ref="childref" :title="modal_title" :message="modal_message" :no="false" :yes="false" :ok="true" :login="false"></modal_component>
+
+                </div>
+            </div>
+
+
+            <!-- TEACHING -->
+            <div class="tab-pane" role="tabpanel" id="teaching">
+                <h2>Insegnamenti</h2>
+                <form @submit.prevent="add">
+                    <label class="form-label">Seleziona Docente:</label>
+                    <select class="form-select" aria-label="Default select example" v-model="addTeachingData.docente">
+                        <option v-for="teacher in teachersList" :value="teacher.id+'|'+teacher.nome+'|'+teacher.cognome">{{ teacher.nome }} {{ teacher.cognome }}</option>
+                    </select>
+
+                    <label class="form-label">Seleziona Corso:</label>
+                    <select class="form-select" aria-label="Default select example" v-model="addTeachingData.corso">
+                        <option v-for="course in coursesList" :value="course.id+'|'+course.nome">{{ course.nome }}</option>
+                    </select>
+
+                    <label class="form-label">Selezione Giorno:</label>
+                    <select class="form-select" v-model="addTeachingData.giorno">
+                        <option value="1">Lunedì</option>
+                        <option value="2">Martedì</option>
+                        <option value="3">Mercoledì</option>
+                        <option value="4">Giovedì</option>
+                        <option value="5">Venerdì</option>
+                    </select>
+                    <label class="form-label">Seleziona Ora:</label>
+                    <input v-model="addTeachingData.ora" class="form-control" type="time" min="15:00" max="19:00">
+
+                    <div v-if="addTeachingData.show" class="alert alert-primary" >
+                        {{ addTeachingData.message }}
+                    </div>
+
+                    <button class="btn btn-primary" type="submit">Aggiungi</button>
+                </form>
+
+                <div class="d-xl-flex justify-content-xl-end">
+                    <input class="form-control-sm d-xl-flex flex-grow-0 search-box" type="text" id="teaching_input" onkeyup="filterTable(this.id)" placeholder="Search">
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Cognome</th>
+                                <th>Corso</th>
+                                <th>Giorno</th>
+                                <th>Ora</th>
+                                <th>Operazione</th>
+                            </tr>
+                        </thead>
+                        <tbody id="teaching_table">
+                            <tr v-for="teaching in teachingList">
+                                <td>{{ teaching.docente.nome }}</td>
+                                <td>{{ teaching.docente.cognome }}</td>
+                                <td>{{ teaching.corso.nome }}</td>
+                                <td>{{ teaching.giorno }}</td>
+                                <td>{{ teaching.ora }}</td>
+                                <td class="d-xl-flex align-items-xl-center"><button v-on:click="remove(teaching)" class="btn btn-danger" type="button">Elimina</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <modal_component modalid="teachingid" ref="childref" :title="modal_title" :message="modal_message" :no="false" :yes="false" :ok="true" :login="false"></modal_component>
+                </div>
+            </div>
+
+
+            <!-- RESERVATION -->
+            <div class="tab-pane " role="tabpanel" id="reservation">
+                <h2>Prenotazioni</h2>
+                <form @submit.prevent="add">
+                    <label class="form-label">Seleziona Utente:</label>
+                    <select @change="check_addable()"  class="form-select" aria-label="Default select example"  v-model="addReservationData.utente" >
+                        <option v-for="user in userList" :value="user.id+'|'+user.nome+'|'+user.cognome">{{ user.nome }} {{ user.cognome }} {{ user.email}}</option>
+                    </select>
+
+                    <label class="form-label">Seleziona Insegnamento:</label>
+                    <select @change="check_addable()"  class="form-select" aria-label="Default select example" v-model="addReservationData.insegnamento">
+                        <option v-for="teaching in teachingList" :value="teaching.id+'|'+teaching.docente.nome+'|'+teaching.docente.cognome+'|'+teaching.corso.nome+'|'+teaching.giorno+'|'+teaching.ora">
+                            {{ teaching.docente.nome }}
+                            {{ teaching.docente.cognome }}
+                            {{ teaching.corso.nome }}
+                            {{ teaching.giorno }}
+                            {{ teaching.ora }}
+                        </option>
+                    </select>
+                    <label class="form-label">Seleziona Stato:</label>
+                    <select @change="check_addable()" class="form-select" v-model="addReservationData.stato">
+                        <option value="Seleziona lo stato" >Seleziona lo stato</option>
+                        <option value="A">A</option>
+                        <option value="E">E</option>
+                        <option value="D">D</option>
+                    </select>
+
+                    <div v-if="addReservationData.show" class="alert alert-primary" >
+                        {{ addReservationData.message }}
+                    </div>
+
+                    <button class="btn btn-primary" type="submit">Aggiungi</button>
+                </form>
+                <div class="d-xl-flex justify-content-xl-end"><input class="form-control-sm d-xl-flex flex-grow-0 search-box" id="reservation_search" type="text" onkeyup="filterTable(this.id)" placeholder="Search"></div>
+                <div class="table-responsive">
+                    <table  class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Materia</th>
+                                <th class="d-xl-flex flex-column">Docente</th>
+                                <th>Utente</th>
+                                <th>Email Utente</th>
+                                <th>Stato</th>
+                                <th>Nuovo stato</th>
+                                <th>Giorno</th>
+                                <th>Ora</th>
+                                <th>Operazione</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reservation_table">
+                            <tr v-for="reservation in reservationList">
+                                <td>{{ reservation.insegnamento.corso.nome }}</td>
+                                <td>{{ reservation.insegnamento.docente.nome }} {{ reservation.insegnamento.docente.cognome }}</td>
+                                <td>{{ reservation.utente.nome }} {{ reservation.utente.cognome }}</td>
+                                <td>{{ reservation.utente.email }}</td>
+                                <td>{{ reservation.stato }}</td>
+                                <td>
+                                    <select aria-label="Default select example" @change="statusChanged($event, reservation)">
+                                        <option value="X">Seleziona lo stato</option>
+                                        <option value="A">A</option>
+                                        <option value="E">E</option>
+                                        <option value="D">D</option>
+                                    </select>
+                                </td>
+                                <td>{{ reservation.insegnamento.giorno }}</td>
+                                <td>{{ reservation.insegnamento.ora }}</td>
+                                <td class="d-xl-flex align-items-xl-center">
+                                    <button class="btn btn-warning" @click="update(reservation)" type="button">Modifica</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <modal_component modalid="reservationid" ref="childref" :title="modal_title" :message="modal_message" :no="false" :yes="false" :ok="true" :login="false"></modal_component>
+
+                    <div v-if="updateReservationData.show" class="alert alert-primary" >
+                        {{ updateReservationData.message }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <script src="assets/js/admin_panel.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+</body>
+
+</html>

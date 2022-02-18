@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<body>
+
+<!-- DOCENTI -->
+<div class="container h-100">
+    <div id="teacher" class="row h-100 justify-content-center align-items-center">
+        <div class="col-10 col-md-8 col-lg-6">
+            <br><br>
+        <form @submit.prevent="add">
+            <h1>Docente</h1>
+            <div class="mb-3">
+                <label for="nome" class="form-label">Nome</label>
+                <input v-model="addTeacher.name" type="text" class="form-control" id="nome" name="nome" aria-describedby="emailHelp">
+            </div>
+            <div class="mb-3">
+                <label for="cognome" class="form-label">Cognome</label>
+                <input v-model="addTeacher.surname" type="text" class="form-control" id="cognome">
+            </div>
+
+            <div v-if="addTeacher.show" class="alert" >
+                {{ addTeacher.message }}
+            </div>
+
+            <button type="submit" class="btn btn-primary">Aggiungi</button>
+
+        </form>
+
+            <div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nome</th>
+                            <th scope="col">Cognome</th>
+                            <th scope="col">op</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="teacher in getTeacherData.teachers">
+                            <td>{{ teacher.nome }}</td>
+                            <td>{{ teacher.cognome }}</td>
+                            <td><button type="submit" v-on:click="remove(teacher)" class="btn btn-primary">Rimuovi</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div v-if="removeTeacher.show" class="alert" >
+                    {{ removeTeacher.message }}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- CORSI -->
+<br><br>
+<div class="container h-100">
+    <div id="course" class="row h-100 justify-content-center align-items-center">
+        <div class="col-10 col-md-8 col-lg-6">
+            <form @submit.prevent="add">
+                <h1>Corso</h1>
+                <div class="mb-3">
+                    <label for="nome" class="form-label">Nome</label>
+                    <input v-model="addCourse.name" type="text" class="form-control" name="nome" aria-describedby="emailHelp">
+                </div>
+
+                <div v-if="addCourse.show" class="alert" >
+                    {{ addCourse.message }}
+                </div>
+
+                <button type="submit" class="btn btn-primary">Aggiungi</button>
+
+            </form>
+
+            <div>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Cognome</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="course in getCourseData.courses">
+                        <td>{{ course.nome }}</td>
+                        <td><button type="submit" v-on:click="remove(course)" class="btn btn-primary">Rimuovi</button></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <div v-if="removeCourse.show" class="alert" >
+                    {{ removeCourse.message }}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!--
+ INSEGNAMENTI -->
+<br><br>
+<div class="container h-100">
+    <div id="teaching" class="row h-100 justify-content-center align-items-center">
+        <div class="col-10 col-md-8 col-lg-6">
+            <form @submit.prevent="add">
+                <h1>Insegnamenti</h1>
+                <div class="mb-3">
+                    <label for="nome" class="form-label">Seleziona Docente: </label>
+                    <select class="form-select" aria-label="Default select example" v-model="docente">
+                        <option v-for="teacher in teachersList" :value="teacher.id+'|'+teacher.nome+'|'+teacher.cognome">{{ teacher.nome }} {{ teacher.cognome }}</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="nome" class="form-label">Seleziona Corso: </label>
+                    <select class="form-select" aria-label="Default select example" v-model="corso">
+                        <option v-for="course in coursesList" :value="course.id+'|'+course.nome">{{ course.nome }}</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="nome" class="form-label">Seleziona Giorno: </label>
+                    <select class="form-select" aria-label="Default select example" v-model="giorno">
+                        <option value="1">Lunedi</option>
+                        <option value="2">Martedi</option>
+                        <option value="3">Mercoledi</option>
+                        <option value="4">Giovedi</option>
+                        <option value="5">Venerdi</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="nome" class="form-label">Seleziona Ora: </label>
+                    <div class="md-form mx-5 my-5">
+                        <input v-model="ora" type="time" min="15:00" max="19:00" id="inputMDEx1" class="form-control">
+                    </div>
+                </div>
+
+                <div v-if="show" class="alert" >
+                    {{ message }}
+                </div>
+
+                <button type="submit" class="btn btn-primary">Aggiungi</button>
+            </form>
+
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Cognome</th>
+                        <th scope="col">Corso</th>
+                        <th scope="col">Giorno</th>
+                        <th scope="col">Ora</th>
+                        <th scope="col">Op</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="teaching in teachingList">
+                        <td>{{ teaching.docente.nome }}</td>
+                        <td>{{ teaching.docente.cognome }}</td>
+                        <td>{{ teaching.corso.nome }}</td>
+                        <td>{{ teaching.giorno }}</td>
+                        <td>{{ teaching.ora }}</td>
+                        <td><button type="submit" v-on:click="remove(teaching)" class="btn btn-primary">Rimuovi</button></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <div v-if="removeTeachingData.show" class="alert" >
+                    {{ removeTeachingData.message }}
+                </div>
+
+        </div>
+    </div>
+</div>
+
+<!--
+ PRENOTAZIONI -->
+<br><br>
+<div class="container h-100">
+    <div id="reservation" class="row h-100 justify-content-center align-items-center">
+        <div class="col-10 col-md-8 col-lg-6">
+            <form @submit.prevent="add">
+                <h1>Prenotazioni</h1>
+                <div class="mb-3">
+                    <label for="nome" class="form-label">Seleziona l'Utente: </label>
+                    <select class="form-select" aria-label="Default select example"  v-model="utente">
+                        <option selected>Seleziona utente</option>
+                        <option v-for="user in userList" :value="user.id+'|'+user.nome+'|'+user.cognome">{{ user.nome }} {{ user.cognome }} {{ user.email}}</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="nome" class="form-label">Seleziona Insegnamento: </label>
+                    <select class="form-select" aria-label="Default select example" v-model="insegnamento">
+                        <option selected>Seleziona Insegnamento</option>
+                        <option v-for="teaching in teachingList" :value="teaching.id+'|'+teaching.docente.nome+'|'+teaching.docente.cognome+'|'+teaching.corso.nome+'|'+teaching.giorno+'|'+teaching.ora">
+                            {{ teaching.docente.nome }}
+                            {{ teaching.docente.cognome }}
+                            {{ teaching.corso.nome }}
+                            {{ teaching.giorno }}
+                            {{ teaching.ora }}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="nome" class="form-label">Seleziona uno Stato: </label>
+                    <select class="form-select" aria-label="Default select example" v-model="stato">
+                        <option value="Seleziona lo stato" >Seleziona lo stato</option>
+                        <option value="A">A</option>
+                        <option value="E">E</option>
+                        <option value="D">D</option>
+                    </select>
+                </div>
+
+                <div v-if="show" class="alert" >
+                    {{ message }}
+                </div>
+
+                <button type="submit" class="btn btn-primary">Aggiungi</button>
+            </form>
+
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">Materia</th>
+
+                    <th scope="col">Nome Docente</th>
+                    <th scope="col">Cognome Docente</th>
+
+                    <th scope="col">Nome Utente</th>
+                    <th scope="col">Cognome Utente</th>
+                    <th scope="col">Email Utente</th>
+
+                    <th scope="col">Giorno</th>
+                    <th scope="col">Ora</th>
+
+                    <th scope="col">Stato</th>
+                    <th scope="col">Nuovo stato</th>
+                    <th scope="col">op</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="reservation in reservationList">
+                    <td>{{ reservation.insegnamento.corso.nome }}</td>
+                    <td>{{ reservation.insegnamento.docente.nome }}</td>
+                    <td>{{ reservation.insegnamento.docente.cognome }}</td>
+
+                    <td>{{ reservation.utente.nome }}</td>
+                    <td>{{ reservation.utente.cognome }}</td>
+                    <td>{{ reservation.utente.email }}</td>
+
+                    <td>{{ reservation.insegnamento.giorno }}</td>
+                    <td>{{ reservation.insegnamento.ora }}</td>
+                    <td>{{ reservation.stato }}</td>
+
+                    <td>
+                        <select aria-label="Default select example" @change="statusChanged($event, reservation)">
+                            <option value="X">Seleziona lo stato</option>
+                            <option value="A">A</option>
+                            <option value="E">E</option>
+                            <option value="D">D</option>
+                        </select>
+                    </td>
+                    <td>
+                        <button class="btn btn-warning" @click="update(reservation)">Aggiorna</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div v-if="updateReservationData.show" class="alert" >
+                {{ updateReservationData.message }}
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="assets/js/admin_panel.js"></script>
+<script src="assets/bootstrap/js/bootstrap.min.js"></script>
+
+</body>
+</html>

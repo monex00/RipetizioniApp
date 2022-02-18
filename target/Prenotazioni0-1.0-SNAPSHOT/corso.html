@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>design_corso</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+
+<body style="min-height: 100vh">
+<div id="navbar">
+    <navbar></navbar>
+</div>
+
+<h1 class="text-center d-lg-flex justify-content-lg-center" style="margin-left: 4px;margin-top: 6vh;margin-bottom: 0;">Ripetizioni disponibili per il corso</h1>
+<h1 id="titolo" class="text-center d-lg-flex justify-content-lg-center font-weight-bold" style="margin-bottom: 4vh;"></h1>
+<div id="ripetizioni" class="container">
+    <div class="modal fade" role="dialog" tabindex="-1" id="modal">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background: #c2d4dd6e;">
+                    <h4 class="modal-title">{{modal.title}}</h4><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="background: #c2d4dd6e;">
+                    <p>{{modal.message}}</p>
+                </div>
+                <div class="modal-footer" style="background: #c2d4dd6e;"><button v-if="modal.no_button" class="btn btn-danger" type="button" v-on:click="closeModal()">No</button><button v-if="modal.yes_button" v-on:click="confirmPrenota()" class="btn btn-success" type="button" >Si</button><button v-on:click="closeModal()" v-if="modal.ok_button" class="btn btn-success" type="button" >Ok</button><button  v-if="modal.login_link" class="btn btn-link" type="button"  onclick="alert('vado al login')">Log in</button></div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div v-for="element in ripetizioni" class="col-md-6" style="background: rgba(194,212,221,0);border-radius: 20px;margin-bottom: 3vh;">
+            <div style="background: #c2d4dd;border-radius: 20px;padding: 2vh;">
+                <h3 class="text-center" style="margin-bottom: 2vh;">Prof. {{element.docente.nome}} {{element.docente.cognome}}</h3>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Giorno</th>
+                            <th>Ora</th>
+                            <th class="d-flex d-lg-flex justify-content-center justify-content-lg-center">Opzioni</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="ripetizione in element.insegnamenti">
+                            <td>{{ripetizione.giorno}}</td>
+                            <td>{{ripetizione.ora}}</td>
+                            <td class="d-flex d-lg-flex d-xl-flex justify-content-center justify-content-lg-center justify-content-xl-center align-items-xl-center justify-content-xxl-center" style="padding: 8px;"><button v-on:click="prenota(ripetizione.id)" class="btn btn-success text-center" type="button" style="height: 5vh;padding: 0;width: 20vh;box-shadow: 2px 2px 4px 1px var(--bs-gray-600);">Prenota</button></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="footer">
+    <foot></foot>
+</div>
+<script src="assets/bootstrap/js/bootstrap.min.js"></script>
+<script src="assets/js/corso.js"></script>
+<script src="assets/js/nav_footer.js"></script>
+</body>
+
+</html>

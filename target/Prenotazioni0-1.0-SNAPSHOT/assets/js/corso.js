@@ -1,0 +1,73 @@
+
+new Vue({
+    el: '#ripetizioni',
+    data: {
+        id_corso: null,
+        ripetizioni: null,
+        modal:{
+            id_ripetizione: null,
+            title: "",
+            message: "",
+            no_button: null,
+            yes_button: null,
+            ok_button: null,
+            login_link: null
+        }
+    },
+    mounted(){
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const name = urlParams.get('corso');
+        const key = urlParams.get('key');
+        $("#titolo").text(name);
+        this.id_corso = key;
+        this.getRipetizioni(this.id_corso);
+    },
+    methods:{
+        getRipetizioni: function (key){
+            var self = this;
+            $.post('getData',{ operation:'getTeachingByCourse' ,id: key}, function(data) {
+                console.log(JSON.stringify(data));
+                self.ripetizioni = data.insegnamenti;
+                console.log(self.ripetizioni);
+            });
+        },
+        confirmPrenota: function (){
+            console.log("prenoto "+ this.modal.id_ripetizione);
+            var self = this;
+            $.post("operations", {entity: 'reservation', operation: 'personalOperation', idInsegnamento: this.modal.id_ripetizione}, function (data){
+                console.log(JSON.stringify(data));
+                self.modal.id_ripetizione = null;
+                switch (data.status) {
+                    case "ok":
+                        self.setModal(data.title,data.message, false, false, true,false);
+                        break;
+                    case "ko":
+                        self.setModal(data.title,data.message, false, false, true,false);
+                        break;
+                    case "ko_auth":
+                        self.setModal(data.title,data.message, false, false, false,true);
+                        break;
+                }
+            })
+        },
+        prenota: function (id){
+            this.modal.id_ripetizione = id;
+            this.setModal("Conferma","Vuoi confermare la prenotazione?", true, true, false,false);
+            $('#modal').modal('show');
+            this.getRipetizioni(this.id_corso);
+        },
+        closeModal: function (){
+            $('#modal').modal('hide');
+            this.getRipetizioni(this.id_corso);
+        },
+        setModal: function (title, message, no, yes, ok, login){
+            this.modal.title = title;
+            this.modal.message = message;
+            this.modal.no_button = no;
+            this.modal.yes_button = yes;
+            this.modal.ok_button = ok;
+            this.modal.login_link = login;
+        }
+    }
+})
