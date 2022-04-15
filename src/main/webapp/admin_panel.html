@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>admin</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/global.css">
     <link rel="stylesheet" href="assets/css/admin_style.css">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -35,13 +36,13 @@
     </div>
 
     <div id="content">
-    <h1>Pannello di amministrazione</h1>
-    <div class="tab_bar_container">
+    <h1 class="text-center">Pannello di amministrazione</h1>
+    <div class="tab_bar_container width-50">
         <ul id="tabBar" class="nav nav-tabs" role="tablist">
-            <li class="nav-item" id="nav_item1" onclick="selectTabBarItem(this.id)" role="presentation"><a class="nav-link active" role="tab" data-bs-toggle="tab" href="#teacher" style="border-top-left-radius: 15px;border-top-right-radius: 15px;background: #c2d4dd;border-style: none;">Docenti</a></li>
-            <li class="nav-item" id="nav_item2" onclick="selectTabBarItem(this.id)" role="presentation"><a class="nav-link" role="tab" data-bs-toggle="tab" href="#course" style="border-top-left-radius: 15px;border-top-right-radius: 15px;background: #c2d4dd6e;border-style: none;border-bottom-style: none;">Corsi</a></li>
-            <li class="nav-item" id="nav_item3" onclick="selectTabBarItem(this.id)" role="presentation"><a class="nav-link" role="tab" data-bs-toggle="tab" href="#teaching" style="border-top-left-radius: 15px;border-top-right-radius: 15px;background: #c2d4dd6e;border-style: none;">Insegnamenti</a></li>
-            <li class="nav-item" id="nav_item4" onclick="selectTabBarItem(this.id)" role="presentation"><a class="nav-link" role="tab" data-bs-toggle="tab" href="#reservation" style="border-top-left-radius: 15px;border-top-right-radius: 15px;background: #c2d4dd6e;border-style: none;">Prenotazioni</a></li>
+            <li class="nav-item margin-top-15" id="nav_item1" onclick="selectTabBarItem(this.id)" role="presentation"><a class="nav-link" role="tab" data-bs-toggle="tab" href="#teacher" style="border-top-right-radius: 10px;background: #f5f2f2;border-style: none;">Docenti</a></li>
+            <li class="nav-item margin-top-15" id="nav_item2" onclick="selectTabBarItem(this.id)" role="presentation"><a class="nav-link" role="tab" data-bs-toggle="tab" href="#course" style="border-top-left-radius: 10px;border-top-right-radius: 10px;background: #dddddd;border-style: none;border-bottom-style: none;">Corsi</a></li>
+            <li class="nav-item margin-top-15" id="nav_item3" onclick="selectTabBarItem(this.id)" role="presentation"><a class="nav-link" role="tab" data-bs-toggle="tab" href="#teaching" style="border-top-left-radius: 10px;border-top-right-radius: 10px;background: #dddddd;border-style: none;">Insegnamenti</a></li>
+            <li class="nav-item margin-top-15" id="nav_item4" onclick="selectTabBarItem(this.id)" role="presentation"><a class="nav-link" role="tab" data-bs-toggle="tab" href="#reservation" style="border-top-left-radius: 10px;border-top-right-radius: 10px;background: #dddddd;border-style: none;">Prenotazioni</a></li>
         </ul>
         <div class="tab-content">
 
@@ -58,7 +59,7 @@
                     <div v-if="addTeacher.show" class="alert alert-primary" >
                         {{ addTeacher.message }}
                     </div>
-                    <button class="btn btn-primary" type="submit">Aggiungi</button>
+                    <button class="btn button" type="submit">Aggiungi</button>
                 </form>
                 <div class="d-xl-flex justify-content-xl-end"><input class="form-control-sm d-xl-flex flex-grow-0 search-box"  id="teacher_input" type="text" onkeyup="filterTable(this.id)" placeholder="Search"></div>
                 <div class="table-responsive">
@@ -74,7 +75,7 @@
                             <tr v-for="teacher in getTeacherData.teachers">
                                 <td>{{ teacher.nome }}</td>
                                 <td>{{ teacher.cognome }}</td>
-                                <td class="d-xl-flex align-items-xl-center"><button v-on:click="remove(teacher)" class="btn btn-danger" type="button">Elimina</button></td>
+                                <td class="align-items-xl-center"><button v-on:click="remove(teacher)" class="btn button-danger" type="button">Elimina</button></td>
                             </tr>
                         </tbody>
                     </table>
@@ -96,7 +97,7 @@
                     <div v-if="addCourse.show" class="alert alert-primary" >
                         {{ addCourse.message }}
                     </div>
-                    <button class="btn btn-primary" type="submit">Aggiungi</button>
+                    <button class="btn button" type="submit">Aggiungi</button>
                 </form>
                 <div class="d-xl-flex justify-content-xl-end"><input class="form-control-sm d-xl-flex flex-grow-0 search-box" type="text" id="course_input" onkeyup="filterTable(this.id)" placeholder="Search"></div>
                 <div class="table-responsive">
@@ -110,7 +111,7 @@
                         <tbody id="course_table">
                             <tr v-for="course in getCourseData.courses">
                                 <td>{{ course.nome }}</td>
-                                <td class="d-xl-flex align-items-xl-center"><button v-on:click="remove(course)" class="btn btn-danger" type="button">Elimina</button></td>
+                                <td class="align-items-xl-center"><button v-on:click="remove(course)" class="btn button-danger" type="button">Elimina</button></td>
                             </tr>
                         </tbody>
                     </table>
@@ -154,7 +155,7 @@
                         {{ addTeachingData.message }}
                     </div>
 
-                    <button class="btn btn-primary" type="submit">Aggiungi</button>
+                    <button class="btn button" type="submit">Aggiungi</button>
                 </form>
 
                 <div class="d-xl-flex justify-content-xl-end">
@@ -179,7 +180,7 @@
                                 <td>{{ teaching.corso.nome }}</td>
                                 <td>{{ teaching.giorno }}</td>
                                 <td>{{ teaching.ora }}</td>
-                                <td class="d-xl-flex align-items-xl-center"><button v-on:click="remove(teaching)" class="btn btn-danger" type="button">Elimina</button></td>
+                                <td class="align-items-xl-center"><button v-on:click="remove(teaching)" class="btn button-danger" type="button">Elimina</button></td>
                             </tr>
                         </tbody>
                     </table>
@@ -219,7 +220,7 @@
                         {{ addReservationData.message }}
                     </div>
 
-                    <button class="btn btn-primary" type="submit">Aggiungi</button>
+                    <button class="btn button" type="submit">Aggiungi</button>
                 </form>
                 <div class="d-xl-flex justify-content-xl-end"><input class="form-control-sm d-xl-flex flex-grow-0 search-box" id="reservation_search" type="text" onkeyup="filterTable(this.id)" placeholder="Search"></div>
                 <div class="table-responsive">
@@ -254,8 +255,8 @@
                                 </td>
                                 <td>{{ reservation.insegnamento.giorno }}</td>
                                 <td>{{ reservation.insegnamento.ora }}</td>
-                                <td class="d-xl-flex align-items-xl-center">
-                                    <button class="btn btn-warning" @click="update(reservation)" type="button">Modifica</button>
+                                <td class="align-items-xl-center">
+                                    <button class="btn button-warning" @click="update(reservation)" type="button">Modifica</button>
                                 </td>
                             </tr>
                         </tbody>

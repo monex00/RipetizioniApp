@@ -26,7 +26,7 @@ new Vue({
     methods:{
         getRipetizioni: function (key){
             var self = this;
-            $.post('getData',{ operation:'getTeachingByCourse' ,id: key}, function(data) {
+            $.post('getData',{ operation:'getTeachingByCourse', id: key}, function(data) {
                 console.log(JSON.stringify(data));
                 self.ripetizioni = data.insegnamenti;
                 console.log(self.ripetizioni);

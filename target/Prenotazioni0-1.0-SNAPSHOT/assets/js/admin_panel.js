@@ -124,7 +124,7 @@ new Vue({
         },
 
         getTeachers: function () {
-            createPostRequest(this.getTeacherData.link, {operation: this.getTeacherData.operation}).then(data => {
+            $.get(this.getTeacherData.link, {operation: this.getTeacherData.operation}).then(data => {
                 this.getTeacherData.teachers = data;
                 console.log("getTeacherList"+  JSON.stringify(data));
                 EventBus.$emit('teachers', data);
@@ -223,7 +223,7 @@ new Vue({
         },
 
         getCourses: function () {
-            createPostRequest(this.getCourseData.link, {operation: this.getCourseData.operation}).then(data => {
+            $.get(this.getCourseData.link, {operation: this.getCourseData.operation}).then(data => {
                 this.getCourseData.courses = data;
                 console.log("getCourseList"+  JSON.stringify(data));
                 EventBus.$emit('courses', data);
@@ -365,7 +365,7 @@ new Vue({
             }
         },
         getTeachingList: function () {
-            createPostRequest(this.getTeachingData.link, {operation: this.getTeachingData.operation}).then(data => {
+            $.get(this.getTeachingData.link, {operation: this.getTeachingData.operation}).then(data => {
                 for(let i=0; i<data.length; i++) {
                     data[i].giorno = convertInDay(data[i].giorno);
                 }
@@ -413,8 +413,9 @@ new Vue({
 
 
 function checkAdminRole(){
+    //TODO: check if works
     console.log("checkAdminRole");
-    $.get("getData").then(data => {
+    $.get("getData", {operation: "getUserData"}).then(data => {
         if(data.ruolo !== "admin"){
             console.log("ruolo non admin");
             $("#admin_error").show();
@@ -477,7 +478,7 @@ new Vue({
     methods:{
         getAvailableTeaching: function (teaching) {
             console.log("getTeaching in getAvailableTeaching" + JSON.stringify(teaching));
-            createPostRequest(this.getAvailableTeachingData.link, {operation: this.getAvailableTeachingData.operation}).then(data => {
+            $.get(this.getAvailableTeachingData.link, {operation: this.getAvailableTeachingData.operation}).then(data => {
                 for(let i=0; i<data.length; i++) {
                     data[i].giorno = convertInDay(data[i].giorno);
                 }
@@ -487,13 +488,13 @@ new Vue({
         },
 
         getUsersList: function () {
-            createPostRequest(this.getUserData.link, {operation: this.getUserData.operation}).then(data => {
+            $.get(this.getUserData.link, {operation: this.getUserData.operation}).then(data => {
                 this.userList = data;
             });
         },
 
         getReservationList: function () {
-            createPostRequest(this.getReservationData.link, {operation: this.getReservationData.operation}).then(data => {
+            $.get(this.getReservationData.link, {operation: this.getReservationData.operation}).then(data => {
                 for(let i=0; i<data.length; i++) {
                     data[i].insegnamento.giorno = convertInDay(data[i].insegnamento.giorno);
                     data[i].nuovoStato = '';
@@ -667,9 +668,9 @@ function selectTabBarItem(id){
     for(let i=0; i<tabBarItems.length; i++){
         let tabBarLink = tabBarItems[i].getElementsByTagName('a')[0];
         if(tabBarItems[i].id === id) {
-            tabBarLink.style.backgroundColor = '#c2d4dd' ;
+            tabBarLink.style.backgroundColor = '#f5f2f2' ;
         }else{
-            tabBarLink.style.backgroundColor = '#c2d4dd6e' ;
+            tabBarLink.style.backgroundColor = '#dddddd' ;
         }
     }
 }

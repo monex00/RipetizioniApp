@@ -7,14 +7,11 @@
 }
 
 body {
-    background-color: #fffffff3;
+    background-color: rgba(222, 220, 220, 0.99);
 }
-
 h1 {
-    margin-left: 2em;
-    margin-top: 2em;
+    padding-top: 1em;
 }
-
 h2 {
     margin-left: 1em;
     padding-top: 1em;
@@ -37,9 +34,16 @@ form {
 }
 
 .tab-pane{
-    background: #c2d4dd;
-    border-radius: 20px;
-    border-top-left-radius: 0;
+    background: #f5f2f2;
+}
+
+a.nav-link {
+    color: black;
+}
+
+a.nav-link:hover {
+    color: black;
+    text-decoration: underline;
 }
 
 .table-responsive{
@@ -60,10 +64,80 @@ form {
 }
 
 .navbar{
-    background-color: #c2d4dd;
+    background-color: #f7f9fa;
 }
 
 .tab_bar_container{
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
     margin: 3em;
+    margin-left: auto;
+    margin-right: auto;
 }
+
+.button {
+    background-color: #000000;
+    border: 2px solid #1A1A1A;
+    border-radius: 10px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    display: inline-block;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: normal;
+    text-align: center;
+    width: 120px;
+    height: 45px;
+    margin-left: 30%;
+}
+
+.button:hover {
+    color: #FFFFFF;
+    box-shadow: rgba(0, 0, 0, 0.4) 0 8px 15px;
+}
+
+
+.button-warning {
+    background-color: #ffee17;
+    border-radius: 12px;
+    color: #000;
+    font-weight: bold;
+    padding: 10px 15px;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+    border: 0;
+    font-size: 14px;
+    width: 100px;
+    height: 40px;
+}
+
+.button-warning:hover{
+    background: #f4e603;
+    box-shadow: 0 0 0 2px rgba(0,0,0,.2), 0 3px 8px 0 rgba(0,0,0,.15);
+}
+
+.button-danger {
+    background: #FF4742;
+    border: 1px solid #FF4742;
+    border-radius: 6px;
+    box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-align: center;
+    vertical-align: middle;
+    width: 90px;
+    height: 40px;
+}
+
+.button-danger:hover {
+    background-position: 0 0;
+    color: #000000;
+    border: 1px solid #000000;
+}
+
 

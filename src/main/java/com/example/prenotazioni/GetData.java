@@ -18,29 +18,7 @@ public class GetData extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        if(session.getAttribute("id") == null) {
-            return;
-        }
-
-        int id = (int) session.getAttribute("id");
-
-        Utente u = DAO.getUserById(id);
-        if(u != null) {
-            PrintWriter pr = response.getWriter();
-            response.setContentType("application/json");
-            String tojson = new Gson().toJson(u);
-            System.out.println(tojson);
-            pr.print(tojson);
-            pr.flush();
-            pr.close();
-        }
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String operation = request.getParameter("operation");
-
         if(operation == null || operation.equals("")) {
             return;
         }
@@ -48,7 +26,24 @@ public class GetData extends HttpServlet {
         PrintWriter pr = response.getWriter();
         response.setContentType("application/json");
 
-        if(operation.equals("getTeachers")) {
+        if(operation.equals("getUserData")) {
+            HttpSession session = request.getSession();
+            if(session.getAttribute("id") == null){
+                return;
+            }
+
+            int id = (int) session.getAttribute("id");
+
+            Utente u = DAO.getUserById(id);
+            if(u != null) {
+                String tojson = new Gson().toJson(u);
+                pr.print(tojson);
+                pr.flush();
+                pr.close();
+            }else {
+                response.sendError(404);
+            }
+        }else if(operation.equals("getTeachers")) {
             ArrayList<Docente> docenti = Docente.getDocenti();
             pr.write(new Gson().toJson(docenti));
             System.out.println("DOCENTI:" + new Gson().toJson(docenti));
@@ -104,6 +99,5 @@ public class GetData extends HttpServlet {
                 pr.close();
             }
         }
-
     }
 }
