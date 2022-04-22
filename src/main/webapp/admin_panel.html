@@ -129,7 +129,7 @@
             <!-- TEACHING -->
             <div class="tab-pane" role="tabpanel" id="teaching">
                 <h2>Insegnamenti</h2>
-                <form @submit.prevent="add">
+                <form action="javascript:void(0);">
                     <label class="form-label">Seleziona Docente:</label>
                     <select class="form-select" aria-label="Default select example" v-model="addTeachingData.docente">
                         <option v-for="teacher in teachersList" :value="teacher.id+'|'+teacher.nome+'|'+teacher.cognome">{{ teacher.nome }} {{ teacher.cognome }}</option>
@@ -149,13 +149,19 @@
                         <option value="5">Venerdì</option>
                     </select>
                     <label class="form-label">Seleziona Ora:</label>
-                    <input v-model="addTeachingData.ora" class="form-control" type="time" min="15:00" max="19:00">
+                    <div>
+                        <button v-on:click="hourSelected(15)" id="15" class="btn button-hour">15:00</button>
+                        <button v-on:click="hourSelected(16)" id="16" class="btn button-hour">16:00</button>
+                        <button v-on:click="hourSelected(17)" id="17" class="btn button-hour">17:00</button>
+                        <button v-on:click="hourSelected(18)" id="18" class="btn button-hour">18:00</button>
+                        <button v-on:click="hourSelected(19)" id="19" class="btn button-hour">19:00</button>
+                    </div>
 
                     <div v-if="addTeachingData.show" class="alert alert-primary" >
                         {{ addTeachingData.message }}
                     </div>
-
-                    <button class="btn button" type="submit">Aggiungi</button>
+                    <br>
+                    <button v-on:click="add()" class="btn button" type="submit">Aggiungi</button>
                 </form>
 
                 <div class="d-xl-flex justify-content-xl-end">
@@ -232,7 +238,6 @@
                                 <th>Utente</th>
                                 <th>Email Utente</th>
                                 <th>Stato</th>
-                                <th>Nuovo stato</th>
                                 <th>Giorno</th>
                                 <th>Ora</th>
                                 <th>Operazione</th>
@@ -245,18 +250,10 @@
                                 <td>{{ reservation.utente.nome }} {{ reservation.utente.cognome }}</td>
                                 <td>{{ reservation.utente.email }}</td>
                                 <td>{{ reservation.stato }}</td>
-                                <td>
-                                    <select aria-label="Default select example" @change="statusChanged($event, reservation)">
-                                        <option value="X">Seleziona lo stato</option>
-                                        <option value="A">A</option>
-                                        <option value="E">E</option>
-                                        <option value="D">D</option>
-                                    </select>
-                                </td>
                                 <td>{{ reservation.insegnamento.giorno }}</td>
                                 <td>{{ reservation.insegnamento.ora }}</td>
                                 <td class="align-items-xl-center">
-                                    <button class="btn button-warning" @click="update(reservation)" type="button">Modifica</button>
+                                    <button class="btn button-danger" @click="update(reservation)" type="button">Disdici</button>
                                 </td>
                             </tr>
                         </tbody>

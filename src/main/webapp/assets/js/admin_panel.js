@@ -16,7 +16,7 @@ var modalComponent = Vue.component('modalComponent',{
         '        <button v-if="no" class="btn btn-danger" type="button" v-on:click="closeModal()">No</button>' +
         '        <button v-if="yes" v-on:click="confirmPrenota()" class="btn btn-success" type="button" >Si</button>' +
         '        <button v-if="ok" class="btn btn-success" v-on:click="closeModal()" type="button" >Ok</button>' +
-        '        <button v-if="login" class="btn btn-link" type="button"  onclick="login_redirect()">Log in</button>' +
+        '        <button v-if="login" class="btn btn-link" type="button" onclick="login_redirect()">Log in</button>' +
         '       </div>' +
         '    </div>' +
         '</div>' +
@@ -314,12 +314,12 @@ new Vue({
             if(this.addTeachingData.docente !== '' || this.addTeachingData.corso !== '' || this.addTeachingData.giorno !== '' || this.addTeachingData.ora !== ''){
 
                 for(let i = 0; i < this.teachingList.length; i++){
-                    console.log("check_addable");
+                    /*console.log("check_addable");
                     console.log("1: " + ((this.teachingList[i].docente.id).toString() === this.addTeachingData.docente.split('|')[0]) + " " + this.teachingList[i].docente.id + " " + this.addTeachingData.docente.split('|')[0]);
                     console.log("2: " + ( this.teachingList[i].giorno === convertInDay(parseInt(this.addTeachingData.giorno.substring(0,1)))) + " " + this.teachingList[i].giorno + " " + this.addTeachingData.giorno);
-                    console.log("3: " + Math.round(Math.abs(this.teachingList[i].ora - this.addTeachingData.ora.replace(':', '.'))) + " " + Number(this.teachingList[i].ora).toFixed(2)  + " " + Number(this.addTeachingData.ora.replace(':', '.')).toFixed(2));
+                    console.log("3: " + Math.round(Math.abs(this.teachingList[i].ora - this.addTeachingData.ora)) + " " + Number(this.teachingList[i].ora).toFixed(2)  + " " + Number(this.addTeachingData.ora));*/
 
-                    if((this.teachingList[i].docente.id).toString() === this.addTeachingData.docente.split('|')[0] && this.teachingList[i].giorno === convertInDay(parseInt(this.addTeachingData.giorno.substring(0,1))) && Math.round(Math.abs(this.teachingList[i].ora - this.addTeachingData.ora.replace(':', '.'))) < 1){
+                    if((this.teachingList[i].docente.id).toString() === this.addTeachingData.docente.split('|')[0] && this.teachingList[i].giorno === convertInDay(parseInt(this.addTeachingData.giorno.substring(0,1))) && Math.round(Math.abs(this.teachingList[i].ora - this.addTeachingData.ora)) < 1){
                         this.modal_title = "Attenzione!";
                         this.modal_message = "Un insegnamento dello stesso professore è già presente in questo orario o non è a distanza di 1 ora dall'orario inserito";
                         this.showModal();
@@ -330,13 +330,16 @@ new Vue({
             }
         },
         add : function (){
+            if(this.addTeachingData.docente === '' || this.addTeachingData.corso === '' || this.addTeachingData.giorno === '' || this.addTeachingData.ora === ''){
+                return;
+            }
+
             if(!this.check_addable()){
                 return;
             }
 
             if(this.addTeachingData.docente && this.addTeachingData.corso && this.addTeachingData.giorno && this.addTeachingData.ora){
                 var nGiorno = this.addTeachingData.giorno.substring(0,1);
-                var nOra = this.addTeachingData.ora.replace(':','.');
                 createPostRequest(this.addTeachingData.link, {
                     idDocente: this.addTeachingData.docente.split('|')[0],
                     nome: this.addTeachingData.docente.split('|')[1],
@@ -344,7 +347,7 @@ new Vue({
                     idCorso: this.addTeachingData.corso.split('|')[0],
                     corso: this.addTeachingData.corso.split('|')[1],
                     giorno: nGiorno,
-                    ora: nOra,
+                    ora: this.addTeachingData.ora,
                     operation: this.addTeachingData.operation,
                     entity : this.entity
                 }).then(data => {
@@ -356,6 +359,7 @@ new Vue({
                         this.addTeachingData.corso = '';
                         this.addTeachingData.giorno = '';
                         this.addTeachingData.ora = '';
+                        this.deselect();
                     }else{
                         this.modal_message = data.message;
                         this.modal_title = data.title;
@@ -383,13 +387,7 @@ new Vue({
                 if(data.status === "ok"){
                     this.removeTeachingData.show = true;
                     this.removeTeachingData.message = data.message;
-                    for(let i = 0; i < this.teachingList.length; i++){
-                        if(this.teachingList[i].docente.id === teaching.docente.id){
-                            this.teachingList.splice(i, 1);
-                        }
-                    }
-                    console.log("removeTeachingList" + JSON.stringify(this.teachingList));
-                    EventBus.$emit('teaching', this.teachingList);
+                    this.getTeachingList();
                 }else{
                     this.modal_message = data.message;
                     this.modal_title = data.title;
@@ -399,7 +397,24 @@ new Vue({
         },
         showModal: function (){
             this.$refs.childref.showModal()
-        }
+        },
+        hourSelected: function (hour){
+            this.addTeachingData.ora = hour;
+            if(!this.check_addable()){
+                this.addTeachingData.ora = '';
+                this.deselect();
+                return;
+            }
+            const clicked = document.getElementById(hour);
+            this.deselect();
+            clicked.classList.add('button-hour-clicked');
+        },
+        deselect: function () {
+            const hours = document.getElementsByClassName('button-hour');
+            for(let i = 0; i < hours.length; i++){
+                hours[i].classList.remove('button-hour-clicked');
+            }
+        },
     },
     mounted() {
         EventBus.$on('teachers', this.setTeachersList);
@@ -413,15 +428,15 @@ new Vue({
 
 
 function checkAdminRole(){
-    //TODO: check if works
-    console.log("checkAdminRole");
     $.get("getData", {operation: "getUserData"}).then(data => {
+        if(data.status === "ko"){
+            window.location.href = window.location.href.replace(/\/[^\/]*$/, data.redirectPath);
+            return;
+        }
         if(data.ruolo !== "admin"){
-            console.log("ruolo non admin");
             $("#admin_error").show();
             $("#content").hide();
         }else{
-            console.log("ruolo admin");
             $("#content").show();
             $("#admin_error").hide();
         }
@@ -497,7 +512,6 @@ new Vue({
             $.get(this.getReservationData.link, {operation: this.getReservationData.operation}).then(data => {
                 for(let i=0; i<data.length; i++) {
                     data[i].insegnamento.giorno = convertInDay(data[i].insegnamento.giorno);
-                    data[i].nuovoStato = '';
                 }
 
                 this.reservationList = data;
@@ -509,12 +523,37 @@ new Vue({
         check_addable: function (){
             if(this.addReservationData.utente !== '' && this.addReservationData.insegnamento !== '' && this.addReservationData.stato !== '' && this.addReservationData.stato === 'A') {
                 for(let i=0; i<this.reservationList.length; i++){
-                    console.log(""+ this.reservationList[i].utente.id + " " + this.addReservationData.utente.split('|')[0]);
-                    if((this.reservationList[i].utente.id).toString() === this.addReservationData.utente.split('|')[0] && this.reservationList[i].stato === 'A' && this.reservationList[i].giorno === this.addReservationData.insegnamento.giorno && this.reservationList[i].ora === this.addReservationData.insegnamento.ora){
-                        this.modal_message = "L'utente ha gia' una prenotazione attiva per questo giorno e ora";
-                        this.modal_title = "Attenzione";
-                        this.showModal()
-                        return false;
+                    let idUguale = false;
+                    let statoA = false;
+                    let giornoUguale = false;
+                    let oraUguale = false;
+                    console.log(i);
+                    if((this.reservationList[i].utente.id).toString() === this.addReservationData.utente.split('|')[0]){
+                        console.log("id uguale");
+                        idUguale = true;
+                    }
+                    if(this.reservationList[i].stato === 'A'){
+                        console.log("stato A");
+                        statoA = true;
+                    }
+
+                    if(this.reservationList[i].insegnamento.giorno === this.addReservationData.insegnamento.split('|')[4]){
+                        console.log("giorno uguale");
+                        giornoUguale = true;
+                    }
+
+                    if(this.reservationList[i].insegnamento.ora.toString() === this.addReservationData.insegnamento.split('|')[5]){
+                        console.log("ora uguale");
+                        oraUguale = true;
+                    }
+
+                    //TODO: check why isnt working
+                    if(idUguale && statoA && giornoUguale && oraUguale){
+                            this.modal_message = "L'utente ha gia' una prenotazione attiva per questo giorno e ora";
+                            this.modal_title = "Attenzione";
+                            console.log("ok");
+                            this.showModal()
+                            return false;
                     }
                 }
             }
@@ -578,46 +617,23 @@ new Vue({
         },
 
         update: function(reservation){
-            console.log(JSON.stringify(reservation));
-            if(reservation.nuovoStato === ''){
-                return;
-            }
-
-            let change = false;
-            //check if the status is changed
-            for(let i=0; i<this.reservationList.length; i++){
-                if(this.reservationList[i].id === reservation.id){
-                    if(this.reservationList[i].stato !== reservation.nuovoStato){
-                        change = true;
-                    }
+            createPostRequest(this.updateReservationData.link, {
+                idPrenotazione: reservation.id,
+                stato: 'D',
+                operation: this.updateReservationData.operation,
+                entity: this.entity
+            }).then(data => {
+                if (data.status === "ok") {
+                    this.updateReservationData.show = true;
+                    this.updateReservationData.message = data.message;
+                    this.getReservationList();
+                    this.getAvailableTeaching();
+                }else{
+                    this.modal_message = data.message;
+                    this.modal_title = data.title;
+                    this.showModal();
                 }
-            }
-            if(change === true) {
-                createPostRequest(this.updateReservationData.link, {
-                    idPrenotazione: reservation.id,
-                    stato: reservation.nuovoStato,
-                    operation: this.updateReservationData.operation,
-                    entity: this.entity
-                }).then(data => {
-                    if (data.status === "ok") {
-                        this.updateReservationData.show = true;
-                        this.updateReservationData.message = data.message;
-                        this.getReservationList();
-                        this.getAvailableTeaching();
-                    }else{
-                        this.modal_message = data.message;
-                        this.modal_title = data.title;
-                        this.showModal();
-                    }
-                });
-            }
-        },
-
-        statusChanged: function(event,reservation){
-            if(event.target.value === 'X'){
-                return;
-            }
-            reservation.nuovoStato = event.target.value;
+            });
         },
 
         showModal: function (){

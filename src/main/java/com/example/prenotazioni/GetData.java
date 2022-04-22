@@ -2,6 +2,7 @@ package com.example.prenotazioni;
 
 import com.google.gson.Gson;
 import dao.*;
+import utils.RedirectMessage;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -29,6 +30,10 @@ public class GetData extends HttpServlet {
         if(operation.equals("getUserData")) {
             HttpSession session = request.getSession();
             if(session.getAttribute("id") == null){
+                RedirectMessage rm = new RedirectMessage("ko", "Non sei loggato", "/index.html");
+                pr.println(new Gson().toJson(rm));
+                pr.flush();
+                pr.close();
                 return;
             }
 
@@ -40,8 +45,10 @@ public class GetData extends HttpServlet {
                 pr.print(tojson);
                 pr.flush();
                 pr.close();
-            }else {
-                response.sendError(404);
+            } else {
+                RedirectMessage rm = new RedirectMessage("ko", "Utente non trovato", "/index.html");
+                pr.println(new Gson().toJson(rm));
+                return;
             }
         }else if(operation.equals("getTeachers")) {
             ArrayList<Docente> docenti = Docente.getDocenti();
