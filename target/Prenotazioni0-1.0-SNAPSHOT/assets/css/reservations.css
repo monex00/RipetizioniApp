@@ -1,0 +1,81 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+h1, h2, h3, h4, h5, h6, a, p {
+    margin: 0;
+}
+
+body{
+    height: max-content;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    min-height: 100vh;
+}
+
+.page-title{
+    margin-top: 50px;
+    margin-bottom: 25px;
+}
+.page-content{
+    padding-top: 15px;
+    padding-bottom: 150px;
+}
+
+.section > h4{
+    margin-bottom: 25px;
+}
+
+.section{
+    border-radius: 10px;
+    padding: 25px 25px 25px 15px;
+    justify-content: center;
+}
+
+.mytab{
+    background: rgba(194,212,221,0.43);
+    padding: 10px 20px 10px 20px;
+    border-radius: 10px 10px 0 0;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.mytab:hover{
+    background: #75818b;
+}
+
+.mytab.selected{
+    background: rgb(194, 212,221);
+}
+
+.mytabs{
+    display: flex;
+    justify-content: center;
+}
+
+button{
+    padding: 8px;
+    color: white;
+    border-radius: 5px;
+}
+
+button.red{
+    background-color: #ff605c;
+}
+button.red:hover{
+    background-color: #e55652;
+}
+
+button.green{
+    background-color: #00ca4e;
+    margin-right: 10px;
+}
+
+
+button.green:hover{
+    background-color: #00b546;
+}

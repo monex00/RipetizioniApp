@@ -3,7 +3,8 @@ new Vue({
     el: '#ripetizioni',
     data: {
         id_corso: null,
-        ripetizioni: null,
+        ripetizioni: [],
+        isGuest: true,
         modal:{
             id_ripetizione: null,
             title: "",
@@ -15,6 +16,7 @@ new Vue({
         }
     },
     mounted(){
+        this.getUser();
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const name = urlParams.get('corso');
@@ -24,18 +26,45 @@ new Vue({
         this.getRipetizioni(this.id_corso);
     },
     methods:{
+        getUser: function (){
+            var self = this;
+            $.get("getData",{operation: 'getUserData'}, function(data){
+                if (data != null) self.isGuest=false;
+            });
+        },
         getRipetizioni: function (key){
             var self = this;
-            $.post('getData',{ operation:'getTeachingByCourse', id: key}, function(data) {
+            $.get('getData',{ operation:'getTeachingByCourse' ,id: key}, function(data) {
                 console.log(JSON.stringify(data));
-                self.ripetizioni = data.insegnamenti;
+                if (data != null) {
+                    self.ripetizioni = data;
+                    self.ripetizioni.forEach(rip => {
+                        rip.insegnamenti.forEach(ins => {
+                            ins.giorno = self.getDayByNumber(ins.giorno);
+                        });
+                    });
+                }
                 console.log(self.ripetizioni);
             });
+        },
+        getDayByNumber(day){
+            switch (day){
+                case 1:
+                    return "Lunedì";
+                case 2:
+                    return "Martedì";
+                case 3:
+                    return "Mercoledì";
+                case 4:
+                    return "Giovedì";
+                case 5:
+                    return "Venerdì";
+            }
         },
         confirmPrenota: function (){
             console.log("prenoto "+ this.modal.id_ripetizione);
             var self = this;
-            $.post("operations", {entity: 'reservation', operation: 'personalOperation', idInsegnamento: this.modal.id_ripetizione}, function (data){
+            $.post("operations", {entity: 'reservation', operation: 'userAdd', idInsegnamento: this.modal.id_ripetizione}, function (data){
                 console.log(JSON.stringify(data));
                 self.modal.id_ripetizione = null;
                 switch (data.status) {

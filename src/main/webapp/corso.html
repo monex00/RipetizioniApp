@@ -6,19 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>design_corso</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/corso.css">
+    <link rel="stylesheet" href="assets/css/nav-foot.css">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 
-<body style="min-height: 100vh">
-<div id="navbar">
-    <navbar></navbar>
+<body>
+<div id="vue-nav">
+    <mynav />
 </div>
 
-<h1 class="text-center d-lg-flex justify-content-lg-center" style="margin-left: 4px;margin-top: 6vh;margin-bottom: 0;">Ripetizioni disponibili per il corso</h1>
-<h1 id="titolo" class="text-center d-lg-flex justify-content-lg-center font-weight-bold" style="margin-bottom: 4vh;"></h1>
-<div id="ripetizioni" class="container">
+<div class="page-title">
+<h1 class="text-center d-lg-flex justify-content-lg-center page-title">Ripetizioni disponibili per il corso</h1>
+<h1 id="titolo" class="text-center d-lg-flex justify-content-lg-center font-weight-bold" ></h1>
+</div>
+<div id="ripetizioni" class="container page-content">
     <div class="modal fade" role="dialog" tabindex="-1" id="modal">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -32,34 +35,36 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <div v-for="element in ripetizioni" class="col-md-6" style="background: rgba(194,212,221,0);border-radius: 20px;margin-bottom: 3vh;">
-            <div style="background: #c2d4dd;border-radius: 20px;padding: 2vh;">
-                <h3 class="text-center" style="margin-bottom: 2vh;">Prof. {{element.docente.nome}} {{element.docente.cognome}}</h3>
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th>Giorno</th>
-                            <th>Ora</th>
-                            <th class="d-flex d-lg-flex justify-content-center justify-content-lg-center">Opzioni</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr v-for="ripetizione in element.insegnamenti">
-                            <td>{{ripetizione.giorno}}</td>
-                            <td>{{ripetizione.ora}}</td>
-                            <td class="d-flex d-lg-flex d-xl-flex justify-content-center justify-content-lg-center justify-content-xl-center align-items-xl-center justify-content-xxl-center" style="padding: 8px;"><button v-on:click="prenota(ripetizione.id)" class="btn btn-success text-center" type="button" style="height: 5vh;padding: 0;width: 20vh;box-shadow: 2px 2px 4px 1px var(--bs-gray-600);">Prenota</button></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+    <div v-if="ripetizioni.length > 0">
+        <div class="mygrid">
+            <div v-for="element in ripetizioni" class="mycell">
+                    <h3 class="text-center">Prof. {{element.docente.nome}} {{element.docente.cognome}}</h3>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Giorno</th>
+                                <th>Ora</th>
+                                <th class="d-flex d-lg-flex justify-content-center justify-content-lg-center">Opzioni</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="ripetizione in element.insegnamenti">
+                                <td>{{ripetizione.giorno}}</td>
+                                <td>{{ripetizione.ora}}</td>
+                                <td class="d-flex d-lg-flex d-xl-flex justify-content-center justify-content-lg-center justify-content-xl-center align-items-xl-center justify-content-xxl-center" style="padding: 8px;"><p v-if="!ripetizione.isAttivo && !isGuest">Sei già prenotato per questi giorno e ora!</p><p v-if="isGuest">Devi essere autenticato per poterti prenotare!</p><button v-if="ripetizione.isAttivo && !isGuest" v-on:click="prenota(ripetizione.id)" class="btn btn-success text-center" type="button" style="height: 5vh;padding: 0;width: 20vh;box-shadow: 2px 2px 4px 1px var(--bs-gray-600);">Prenota</button></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
             </div>
         </div>
     </div>
+    <div v-if="ripetizioni.length == 0"><h5 class="page-placeholder">Non ci sono ripetizioni disponibili.</h5></div>
 </div>
-<div id="footer">
-    <foot></foot>
+
+<div id="vue-foot">
+    <myfoot />
 </div>
 <script src="assets/bootstrap/js/bootstrap.min.js"></script>
 <script src="assets/js/corso.js"></script>

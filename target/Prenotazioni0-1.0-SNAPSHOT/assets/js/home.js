@@ -2,7 +2,6 @@ var index = -1;
 var colori = ['#77a8a8',"#b9b0b0", "#b0aac0","#e4d1d1"];
 
 
-
 Vue.component('materia', {
     props: ['id','name'],
     data: function () {
@@ -31,7 +30,7 @@ new Vue({
     methods:{
         getMaterie: function(){
             let self = this;
-            $.post('getData',{operation: 'getCourses'}, function(data) {
+            $.get('getData',{operation: 'getCoursesWithTeaching'}, function(data) {
                 console.log(JSON.stringify(data));
                 for (let i = 0; i < data.length ; i++){
                     self.materie.push({key:data[i].id, text: data[i].nome});
@@ -56,7 +55,7 @@ new Vue({
     methods:{
         getUser: function (){
             var self = this;
-            $.get("getData", function(data){
+            $.get("getData",{operation: 'getUserData'}, function(data){
                 if (data != null) self.setUser(data);
             });
         },
@@ -71,33 +70,56 @@ new Vue({
 })
 
 new Vue({
-    el: '#prenotazioni',
+    el: '#notify',
     data: {
-        prenotazioniAttive: [],
-        prenotazioniPassate: []
+        modal: {
+            title: "",
+            message: "",
+        }
     },
     mounted(){
-        this.getPrenotazioni()
+        console.log("notify");
+        this.getNotifications();
     },
     methods:{
-        getPrenotazioni: function(){
+        getNotifications:function(){
             var self = this;
-            $.post('getData',{operation: 'getMyReservations'}, function(data) {
-                for (var i = 0; i < data.length ; i++){
-                    console.log(JSON.stringify(data[i]));
-                    const prenotazione = {
-                        key: data[i].id,
-                        corso: data[i].insegnamento.corso.nome,
-                        docente: data[i].insegnamento.docente.nome + ' ' + data[i].insegnamento.docente.cognome,
-                        giorno: data[i].insegnamento.giorno,
-                        ora: data[i].insegnamento.ora,
-                        stato: data[i].stato
-                    }
-                    console.log(prenotazione)
-                    if (data[i].stato == 'A') self.prenotazioniAttive.push(prenotazione);
-                    else self.prenotazioniPassate.push(prenotazione);
+            $.get('getData',{operation: 'getMyNotifications'}, function(data) {
+                if (data.length > 0){
+                    console.log(JSON.stringify(data));
+                    let message = '';
+                    data.forEach(pren => {
+                        const raw = `- La tua ripetizione per ${pren.insegnamento.corso.nome} con il docente ${pren.insegnamento.docente.nome} ${pren.insegnamento.docente.cognome} per il giorno ${self.getDayByNumber(pren.insegnamento.giorno)} alle ore ${pren.insegnamento.ora} è stata marcata come ${pren.stato == 'E' ? 'eseguita' : 'disdetta'}`;
+                        message += raw + '\n\n';
+                    });
+                    console.log(message);
+                    self.setModal("Nuovo Messaggio!", message);
                 }
             });
+        },
+        closeModal: function(){
+            $('#modal').modal('hide');
+        },
+        setModal: function(title, message){
+            this.modal.title = title;
+            this.modal.message = message;
+            $('#modal').modal('show');
+        },
+        getDayByNumber(day){
+            switch (day){
+                case 1:
+                    return "lunedì";
+                case 2:
+                    return "martedì";
+                case 3:
+                    return "mercoledì";
+                case 4:
+                    return "giovedì";
+                case 5:
+                    return "venerdì";
+            }
         }
     }
 })
+
+

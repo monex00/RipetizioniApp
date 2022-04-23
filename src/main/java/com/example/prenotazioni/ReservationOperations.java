@@ -90,7 +90,7 @@ public class ReservationOperations extends HttpServlet {
             }
             Utils.sendMessage(pr, "ok", "Stato della prenotazione aggiornato con successo", "Operazione eseguita");
             pr.close();
-        }else if (operation.equals("personalOperation")){
+        }else if (operation.equals("userAdd")){
             if (session.getAttribute("id") == null){
                 Utils.sendMessage(pr, "ko_auth", "Devi essere autenticato per poterti prenotare!", "Non sei autenticato");
                 pr.close();
@@ -110,6 +110,28 @@ public class ReservationOperations extends HttpServlet {
                 return;
             }
             Utils.sendMessage(pr, "ok", "La tua prenotazione è avvenuta con successo, potrà essere visualizzata nella sezione delle tue prenotazioni attive.", "Successo");
+            pr.close();
+        }else if(operation.equals("userUpdate")) {
+            if (session.getAttribute("id") == null){
+                Utils.sendMessage(pr, "ko", "Qualcosa è andato storto, riprova", "Errore");
+                pr.flush();
+                pr.close();
+                return;
+            }
+
+            int id = (Integer) session.getAttribute("id");
+            if(idPrenotazione == null || idPrenotazione.equals("") || request.getParameter("stato") == null || DAO.getUserById(id) == null){
+                Utils.sendMessage(pr, "ko", "Qualcosa è andato storto, riprova.", "Errore");
+                pr.close();
+                return;
+            }
+            char stato = request.getParameter("stato").charAt(0);
+            if (!Prenotazione.updatePrenotazione(Integer.parseInt(idPrenotazione), stato)) {
+                Utils.sendMessage(pr, "ko", "Qualcosa è andato storto, riprova.", "Errore");
+                pr.close();
+                return;
+            }
+            Utils.sendMessage(pr, "ko", "Operazione avvenuta con successo.", "Successo");
             pr.close();
         }
     }

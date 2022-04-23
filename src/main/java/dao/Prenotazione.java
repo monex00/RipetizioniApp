@@ -19,13 +19,6 @@ public class Prenotazione {
         this.stato = stato;
     }
 
-    public Prenotazione(Utente utente, Insegnamento insegnamento, char stato) {
-        this.id = -1;
-        this.utente = utente;
-        this.insegnamento = insegnamento;
-        this.stato = stato;
-    }
-
 
     public Utente getUtente() {
         return utente;
@@ -35,6 +28,13 @@ public class Prenotazione {
         this.utente = utente;
     }
 
+    public char getStato() {
+        return stato;
+    }
+
+    public Insegnamento getInsegnamento() {
+        return insegnamento;
+    }
 
     public static boolean addPrenotazioneToDB(int idUtente, int idInsegnamento, char stato){
         Connection conn = DAO.getConnection();
@@ -125,6 +125,26 @@ public class Prenotazione {
         return res;
     }
 
+    public static boolean updateNotifications(int utente){
+        Connection conn = DAO.getConnection();
+        Boolean res = true;
+        PreparedStatement prStatement = null;
+
+        try {
+            prStatement = conn != null ? conn.prepareStatement("UPDATE Prenotazione set toNotify = 0 WHERE idUtente = ? ") : null;
+            if(prStatement != null) {
+                prStatement.setInt(1, utente);
+            }
+            prStatement.executeUpdate();
+        } catch (SQLException e) {
+            res = false;
+            e.printStackTrace();
+        }finally {
+            DAO.closeConnection(conn, prStatement);
+        }
+        return res;
+    }
+
 
     public static ArrayList<Prenotazione> getPrenotazioni(){
         /*
@@ -181,8 +201,8 @@ public class Prenotazione {
                     "        JOIN corso ON (insegnamento.idCorso = corso.IdCorso) " +
                     "        JOIN docente ON (docente.idDocente = insegnamento.idDocente)" +
                     "        JOIN utente ON (prenotazione.IdUtente = utente.idUtente)" +
-                    "        WHERE utente.idUtente = ?"+
-                    "        GROUP BY corso.Titolo, docente.Nome, docente.Cognome, utente.Nome, utente.cognome, insegnamento.Giorno, insegnamento.Ora, prenotazione.stato") : null;
+                    "        WHERE utente.idUtente = ?"): null;//+
+                  //  "        GROUP BY corso.Titolo, docente.Nome, docente.Cognome, utente.Nome, utente.cognome, insegnamento.Giorno, insegnamento.Ora, prenotazione.stato") : null;
             if(prStatement != null) {
                 prStatement.setInt(1, user.getId());
             }
@@ -198,6 +218,40 @@ public class Prenotazione {
         }finally{
             DAO.closeConnection(conn, prStatement);
         }
+        return prenotazioni;
+    }
+
+
+    public static ArrayList<Prenotazione> getNotificheDaUtente(Utente user) {
+        Connection conn = DAO.getConnection();
+        PreparedStatement prStatement = null;
+        ArrayList<Prenotazione> prenotazioni = new ArrayList<>();
+
+        try {
+            prStatement = conn != null ? conn.prepareStatement("SELECT corso.*, docente.*, utente.idUtente, utente.Nome as NomeUtente, utente.Cognome as CognomeUtente, utente.Email, utente.Ruolo," +
+                    "insegnamento.idInsegnamento, insegnamento.isAttivo, insegnamento.Giorno, insegnamento.Ora, prenotazione.Idprenotazione, prenotazione.stato" +
+                    "        FROM prenotazione JOIN insegnamento ON(prenotazione.idInsegnamento = insegnamento.idInsegnamento)" +
+                    "        JOIN corso ON (insegnamento.idCorso = corso.IdCorso) " +
+                    "        JOIN docente ON (docente.idDocente = insegnamento.idDocente)" +
+                    "        JOIN utente ON (prenotazione.IdUtente = utente.idUtente)" +
+                    "        WHERE utente.idUtente = ? AND prenotazione.toNotify = TRUE "): null;//+
+            //  "        GROUP BY corso.Titolo, docente.Nome, docente.Cognome, utente.Nome, utente.cognome, insegnamento.Giorno, insegnamento.Ora, prenotazione.stato") : null;
+            if(prStatement != null) {
+                prStatement.setInt(1, user.getId());
+            }
+            ResultSet rs = prStatement.executeQuery();
+            while (rs.next()){
+                Docente d = new Docente(rs.getInt("idDocente"),rs.getString("Nome"), rs.getString("Cognome"), rs.getBoolean("isAttivo"));
+                Corso c = new Corso(rs.getInt("idCorso"), rs.getString("Titolo"), rs.getBoolean("isAttivo"));
+                Insegnamento i = new Insegnamento(rs.getInt("idInsegnamento"), d, c, rs.getFloat("Ora"), rs.getInt("Giorno"), rs.getBoolean("isAttivo"));
+                prenotazioni.add(new Prenotazione(rs.getInt("idPrenotazione"), null, i, rs.getString("stato").charAt(0)));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally{
+            DAO.closeConnection(conn, prStatement);
+        }
+        updateNotifications(user.getId());
         return prenotazioni;
     }
 

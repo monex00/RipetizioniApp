@@ -66,6 +66,14 @@ public class Insegnamento{
         this.corso = corso;
     }
 
+    public boolean isAttivo() {
+        return isAttivo;
+    }
+
+    public void setAttivo(boolean attivo) {
+        this.isAttivo = attivo;
+    }
+
     public static boolean addInsegnamentoToDB(int idDocente, int idCorso, float ora, int giorno){
         Connection conn = DAO.getConnection();
         Boolean res = true;
@@ -209,7 +217,8 @@ public class Insegnamento{
         return insegnamenti;
     }
 
-    public static String getInsegnamentiDaIdMateria(String id){
+    public static String getInsegnamentiDaIdMateria(String id, Utente user){
+        System.out.println("ID PROVA: " + user);
         Connection conn = DAO.getConnection();
         PreparedStatement prStatement = null;
         InsegnamentiDaIdMateria insegnamenti = new InsegnamentiDaIdMateria();
@@ -238,7 +247,10 @@ public class Insegnamento{
         }finally{
             DAO.closeConnection(conn, prStatement);
         }
-        return new Gson().toJson(insegnamenti);
+
+        if (user != null) insegnamenti.removeNotAllowedDayHour(user);
+
+        return new Gson().toJson(insegnamenti.insegnamenti);
     }
 
     private static class InsegnamentiDaIdMateria {
@@ -262,6 +274,21 @@ public class Insegnamento{
                 InsegnamentiPerDocente new_i = new InsegnamentiPerDocente(i.getDocente());
                 new_i.addInsegnamento(i);
                 insegnamenti.add(new_i);
+            }
+        }
+
+        public void removeNotAllowedDayHour(Utente user) {
+            ArrayList<Prenotazione> prenotazioni = Prenotazione.getPrenotazioniDaUtente(user);
+            for (InsegnamentiPerDocente insDoc: insegnamenti) {
+                for (Insegnamento ins: insDoc.insegnamenti) {
+                    for (Prenotazione pren: prenotazioni) {
+                        if (pren.getStato() == 'A'){
+                            if (pren.getInsegnamento().getGiorno() == ins.getGiorno() && pren.getInsegnamento().getOra() == ins.getOra()){
+                                ins.setAttivo(false);
+                            }
+                        }
+                    }
+                }
             }
         }
 

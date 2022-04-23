@@ -16,7 +16,7 @@ new Vue({
                 var _this = this;
                 $.post(this.link ,{
                     email: this.email,
-                    password: crypted.toString(),
+                    password: this.password,//crypted.toString(),
                     remember: this.remember
                 }, function (data){
                     _this.redirectIfSuccess(data);

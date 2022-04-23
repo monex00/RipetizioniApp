@@ -1,0 +1,95 @@
+#vue-foot{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.footer{
+    height: 100px;background: #8ca3a3;border-top-left-radius: 10px;border-top-right-radius: 10px;width:100%;
+}
+
+header h3 {
+    margin: 0;
+}
+
+ul, li {
+    padding: 0;
+    margin: 0;
+}
+
+nav li a{
+    font-weight: 500;
+    font-size: 18px;
+    text-decoration: none;
+    color: black;
+}
+
+nav li a:hover{
+    font-weight: 500;
+    font-size: 18px;
+    text-decoration: none;
+    color: black;
+}
+header{
+    background-color: #8ca3a3;
+    display: flex;
+    justify-content: space-around;
+    align-items:center;
+    padding: 30px 5%;
+    border-radius: 0px 0px 10px 10px;
+}
+
+nav{
+    align-items: center;
+}
+
+nav ul{
+    list-style: none;
+}
+nav ul li{
+    display: inline-block;
+    background: #c2d4dd;
+    padding: 10px;
+    margin-left: 20px;
+    border-radius: 10px;
+    position: relative;
+}
+nav ul ul {
+    position: absolute;
+    top: 47px;
+    left: 0;
+    display: none;
+}
+
+nav ul li:hover ul {
+    display: block;
+
+}
+
+nav ul li:hover {
+    background: #75818b;
+}
+
+nav ul .drop:hover {
+    border-radius: 10px 10px 0 0;
+
+}
+
+nav ul li ul{
+    background: #75818b;
+    width: max-content;
+    border-radius: 0 2px 2px 2px;
+    padding: 0;
+}
+
+nav ul li ul li {
+    background: none;
+    padding: 10px 10px;
+    margin: 0;
+    width: 100%;
+    float: none;
+    position:relative;
+    display: list-item;
+    border-radius: 2px;
+    background: #c2d4dd;
+}
