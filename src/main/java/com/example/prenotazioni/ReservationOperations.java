@@ -83,7 +83,7 @@ public class ReservationOperations extends HttpServlet {
                 return;
             }
 
-            if (!Prenotazione.updatePrenotazione(Integer.parseInt(idPrenotazione), stato)) {
+            if (!Prenotazione.updatePrenotazione(Integer.parseInt(idPrenotazione), stato, true)) {
                 Utils.sendMessage(pr, "ko", "Errore nell'aggiornamento della prenotazione" , "Errore");
                 pr.close();
                 return;
@@ -126,7 +126,7 @@ public class ReservationOperations extends HttpServlet {
                 return;
             }
             char stato = request.getParameter("stato").charAt(0);
-            if (!Prenotazione.updatePrenotazione(Integer.parseInt(idPrenotazione), stato)) {
+            if (!Prenotazione.updatePrenotazione(Integer.parseInt(idPrenotazione), stato, false)) {
                 Utils.sendMessage(pr, "ko", "Qualcosa è andato storto, riprova.", "Errore");
                 pr.close();
                 return;

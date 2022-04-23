@@ -85,8 +85,8 @@ public class Prenotazione {
 
             //String query3 = "SELECT idInsegnamento FROM Insegnamento WHERE idDocente"
 
-            prStatement = conn != null ? conn.prepareStatement("INSERT INTO Prenotazione(idUtente, idInsegnamento, stato) " +
-                    "VALUES ((?), (?), ? )") : null;
+            prStatement = conn != null ? conn.prepareStatement("INSERT INTO Prenotazione(idUtente, idInsegnamento, stato, toNotify) " +
+                    "VALUES ((?), (?), ?, 1 )") : null;
             if(prStatement != null) {
                 prStatement.setInt(1, idUtente);
                 prStatement.setInt(2, idInsegnamento);
@@ -103,7 +103,7 @@ public class Prenotazione {
         return res;
     }
 
-    public static boolean updatePrenotazione(int idPrenotazione, char stato){
+    public static boolean updatePrenotazione(int idPrenotazione, char stato, boolean toNotify) {
         Connection conn = DAO.getConnection();
         Boolean res = true;
         PreparedStatement prStatement = null;
@@ -113,6 +113,9 @@ public class Prenotazione {
             if(prStatement != null) {
                 prStatement.setString(1, stato + "");
                 prStatement.setInt(2, idPrenotazione);
+            }
+            if(toNotify) {
+                updateNotifications(-1, idPrenotazione);
             }
             prStatement.executeUpdate();
         } catch (SQLException e) {
@@ -125,15 +128,27 @@ public class Prenotazione {
         return res;
     }
 
-    public static boolean updateNotifications(int utente){
+    public static boolean updateNotifications(int utente, int idPrenotazioni){
         Connection conn = DAO.getConnection();
         Boolean res = true;
         PreparedStatement prStatement = null;
+        String query = "";
+
+        if(idPrenotazioni == -1) {
+            query = "UPDATE Prenotazione set toNotify = 0 WHERE idUtente = ? ";
+        }else{
+            query = "UPDATE Prenotazione set toNotify = 1 WHERE idPrenotazione = ? ";
+        }
 
         try {
-            prStatement = conn != null ? conn.prepareStatement("UPDATE Prenotazione set toNotify = 0 WHERE idUtente = ? ") : null;
+            prStatement = conn != null ? conn.prepareStatement(query) : null;
             if(prStatement != null) {
-                prStatement.setInt(1, utente);
+                if(idPrenotazioni == -1) {
+                    prStatement.setInt(1, utente);
+                }else{
+                    prStatement.setInt(1, idPrenotazioni);
+                }
+
             }
             prStatement.executeUpdate();
         } catch (SQLException e) {
@@ -168,7 +183,7 @@ public class Prenotazione {
                     "        JOIN corso ON (insegnamento.idCorso = corso.IdCorso) " +
                     "        JOIN docente ON (docente.idDocente = insegnamento.idDocente)" +
                     "        JOIN utente ON (prenotazione.IdUtente = utente.idUtente)" +
-                    "        GROUP BY corso.Titolo, docente.Nome, docente.Cognome, utente.Nome, utente.cognome, insegnamento.Giorno, insegnamento.Ora, prenotazione.stato") : null;
+                    "        ORDER BY corso.Titolo, docente.Nome, docente.Cognome, utente.Nome, utente.cognome, insegnamento.Giorno, insegnamento.Ora, prenotazione.stato") : null;
 
             if(rs != null){
                 while (rs.next()){
@@ -251,7 +266,7 @@ public class Prenotazione {
         }finally{
             DAO.closeConnection(conn, prStatement);
         }
-        updateNotifications(user.getId());
+        updateNotifications(user.getId(), -1);
         return prenotazioni;
     }
 
