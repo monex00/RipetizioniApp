@@ -50,6 +50,8 @@ public class Login extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
+        System.out.println("Provando login " + email + password);
+
 
         if(email == null || password == null || email.isEmpty() || password.isEmpty()) {
             Message msg = new SimpleMessage("ko", "Parametri mancanti");

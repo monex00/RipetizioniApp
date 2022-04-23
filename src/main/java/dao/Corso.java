@@ -112,6 +112,33 @@ public class Corso {
         }
         return corsi;
     }
+
+
+    public static ArrayList<Corso> getCorsiConInsegnamenti(){
+        Connection conn = DAO.getConnection();
+        Statement statement = null;
+        ArrayList<Corso> corsi = new ArrayList<>();
+
+        try {
+            statement = conn != null ? conn.createStatement() : null;
+            ResultSet rs = statement != null ? statement.executeQuery("SELECT * FROM corso JOIN insegnamento ON (corso.idCorso = insegnamento.idCorso) WHERE corso.isAttivo = 1 AND insegnamento.isAttivo = 1 AND insegnamento.idInsegnamento NOT IN ( SELECT prenotazione.idInsegnamento FROM prenotazione WHERE prenotazione.stato = 'A') GROUP BY corso.idCorso") : null;
+
+            if(rs != null){
+                while (rs.next()){
+                    corsi.add(new Corso(rs.getInt("idCorso"), rs.getString("Titolo"), rs.getBoolean("isAttivo")));
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally{
+            DAO.closeConnection(conn, statement);
+        }
+        return corsi;
+    }
+
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

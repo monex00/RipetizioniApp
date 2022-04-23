@@ -1,0 +1,52 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+h1, h2, h3, h4, h5, h6, a, p {
+    margin: 0;
+}
+
+body{
+    height: max-content;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    min-height: 100vh;
+    background-color: #dedcdd;
+}
+
+.page-title{
+    margin-top: 50px;
+    margin-bottom: 25px;
+}
+.page-content{
+    padding-top: 25px;
+    padding-bottom: 150px;
+}
+
+.section > h4{
+    margin-bottom: 25px;
+}
+
+.section{
+    margin-bottom: 30px;
+    border-radius: 10px;
+    padding-top: 25px;
+    padding-bottom: 15px;
+    background-color: #f4f3f1;
+    box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+}
+
+.page-placeholder{
+    margin-top: 4vh;
+    width: 100%;
+    text-align: center;
+}
+
+.modal-body > p{
+    white-space: pre-line;
+}
+

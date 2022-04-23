@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>RipetiSuper - Le tue Prenotazioni</title>
+
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/reservations.css">
+    <link rel="stylesheet" href="assets/css/nav-foot.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<body style="background: rgba(255,255,255,0.95);">
+
+<div id="vue-nav">
+    <mynav />
+</div>
+<div id="utente">
+    <h1 class="page-title text-center d-lg-flex justify-content-lg-center">Le tue prenotazioni</h1>
+</div>
+<div class="page-content">
+<div id="prenotazioni">
+    <div class="modal fade" role="dialog" tabindex="-1" id="modal">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background: #c2d4dd6e;">
+                    <h4 class="modal-title">{{modal.title}}</h4><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="background: #c2d4dd6e;">
+                    <p>{{modal.message}}</p>
+                </div>
+                <div class="modal-footer" style="background: #c2d4dd6e;"><button v-on:click="closeModal()" class="btn btn-success" type="button" >Ok</button></div>
+            </div>
+        </div>
+    </div>
+    <div class="mytabs">
+    <div id="attive_tab_button" onclick="selectAttive()" class="mytab selected">Attive</div><div onclick="selectPassate()" id="passate_tab_button" class="mytab">Passate</div>
+    </div>
+    <div class="container">
+    <div id="attive_tab" v-if="!guest" class="section" style="background: #c2d4dd;">
+        <h4 class="text-start">Le tue prenotazioni attive:</h4>
+        <p v-if="zeroAttive">Non hai prenotazioni attive.</p>
+        <div v-if="!zeroAttive" class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr style="background: rgba(0,0,0,0.10);">
+                    <th>Corso</th>
+                    <th>Docente</th>
+                    <th>Giorno</th>
+                    <th>Ora</th>
+                    <th>Opzioni</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="pren in prenotazioniAttive">
+                    <td>{{pren.corso}}</td>
+                    <td>{{pren.docente}}</td>
+                    <td>{{pren.giorno}}</td>
+                    <td>{{pren.ora}}</td>
+                    <td><div><button v-on:click="updatePrenotazione(pren.key,'E')" type="button" class="button green">Marca eseguita</button><button v-on:click="updatePrenotazione(pren.key,'D')" type="button" class="button red">Disdici</button></div></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="passate_tab" v-if="!guest" class="section" style="background: #c2d4dd; display: none">
+        <h4 class="text-start">Le tue prenotazioni passate:<br></h4>
+        <p v-if="zeroPassate">Non hai prenotazioni passate.</p>
+        <div v-if="!zeroPassate" class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr style="background: rgba(0,0,0,0.10);">
+                    <th>Corso</th>
+                    <th>Docente</th>
+                    <th>Giorno</th>
+                    <th>Ora</th>
+                    <th>Stato</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="pren in prenotazioniPassate">
+                    <td>{{pren.corso}}</td>
+                    <td>{{pren.docente}}</td>
+                    <td>{{pren.giorno}}</td>
+                    <td>{{pren.ora}}</td>
+                    <td>{{pren.stato}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+</div>
+    <div id="vue-foot">
+        <myfoot />
+    </div>
+<script src="assets/bootstrap/js/bootstrap.min.js"></script>
+<script src="assets/js/reservations.js"></script>
+<script src="assets/js/nav_footer.js"></script>
+</body>
+</html>

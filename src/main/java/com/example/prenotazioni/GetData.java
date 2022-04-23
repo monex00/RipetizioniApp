@@ -62,6 +62,12 @@ public class GetData extends HttpServlet {
             System.out.println("CORSI:" +  new Gson().toJson(corsi));
             pr.flush();
             pr.close();
+        }else if(operation.equals("getCoursesWithTeaching")){
+            ArrayList<Corso> corsi = Corso.getCorsiConInsegnamenti();
+            pr.write(new Gson().toJson(corsi));
+            System.out.println("CORSI:" +  new Gson().toJson(corsi));
+            pr.flush();
+            pr.close();
         }else if(operation.equals("getTeaching")){
             ArrayList<Insegnamento> insegnamenti = Insegnamento.getInsegnamenti();
             System.out.println("INSEGNAMENTI" + new Gson().toJson(insegnamenti));
@@ -87,21 +93,60 @@ public class GetData extends HttpServlet {
             pr.flush();
             pr.close();
         }else if(operation.equals("getTeachingByCourse")){
-            String  teaching_json = Insegnamento.getInsegnamentiDaIdMateria(request.getParameter("id"));
-            pr.write(teaching_json);
-            System.out.println("INSEGNAMENTI DISPONIBILI:" + teaching_json);
+            HttpSession session = request.getSession();
+            Integer id = (Integer) session.getAttribute("id");
+            Utente user;
+            if (id != null){
+                user = DAO.getUserById(id);
+            }else {
+                user = null;
+            }
+
+            pr.write(Insegnamento.getInsegnamentiDaIdMateria(request.getParameter("id"),user));
             pr.flush();
             pr.close();
         }else if (operation.equals("getMyReservations")){
             HttpSession session = request.getSession();
-            if(session.getAttribute("id") == null)
+            if(session.getAttribute("id") == null) {
+                pr.print("null");
+                pr.flush();
+                pr.close();
                 return;
+            }
             Integer id = (Integer) session.getAttribute("id");
+            System.out.println(id);
             Utente user = DAO.getUserById(id);
+            System.out.println(user);
             if (user != null){
                 ArrayList<Prenotazione> prenotazioni = Prenotazione.getPrenotazioniDaUtente(user);
-                System.out.println("MIE PRENOTAZIONI" + new Gson().toJson(prenotazioni));
-                pr.write(new Gson().toJson(prenotazioni));
+                System.out.println("PRENOTAZIONI TROVATE: " + prenotazioni);
+                pr.write( new Gson().toJson(prenotazioni));
+                pr.flush();
+                pr.close();
+            }else{
+                pr.write("null");
+                pr.flush();
+                pr.close();
+            }
+        }else if (operation.equals("getMyNotifications")){
+            HttpSession session = request.getSession();
+            if(session.getAttribute("id") == null) {
+                pr.print("null");
+                pr.flush();
+                pr.close();
+                return;
+            }
+            Integer id = (Integer) session.getAttribute("id");
+            System.out.println(id);
+            Utente user = DAO.getUserById(id);
+            System.out.println(user);
+            if (user != null){
+                ArrayList<Prenotazione> notifiche = Prenotazione.getNotificheDaUtente(user);
+                pr.write( new Gson().toJson(notifiche));
+                pr.flush();
+                pr.close();
+            }else{
+                pr.write("null");
                 pr.flush();
                 pr.close();
             }

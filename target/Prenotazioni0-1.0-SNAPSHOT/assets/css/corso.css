@@ -1,0 +1,50 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+h1, h2, h3, h4, h5, h6, a, p {
+    margin: 0;
+}
+body{
+    height: max-content;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    min-height: 100vh;
+}
+
+.page-title{
+    margin-top: 50px;
+    margin-bottom: 25px;
+    text-align: center;
+}
+.page-content{
+    padding-top: 25px;
+    padding-bottom: 150px;
+}
+
+.page-placeholder{
+    margin-top: 4vh;
+    width: 100%;
+    text-align: center;
+}
+
+.mygrid{
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    gap: 20px;
+    grid: auto / auto auto;
+}
+
+.mycell{
+    background: #c2d4dd;
+    border-radius: 20px;
+    padding: 25px;
+}
+
+.mycell h3 {
+    margin-bottom: 25px;
+}

@@ -3,86 +3,52 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>ripetizioni_home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
-    <link rel="stylesheet" href="assets/css/Navigation-Clean.css">
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/home.css">
+    <link rel="stylesheet" href="assets/css/nav-foot.css">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 
-<body style="background: rgba(255,255,255,0.95);">
-<div id="navbar">
-<navbar></navbar>
+<body >
+
+<div id="vue-nav">
+    <mynav />
 </div>
 <div id="utente">
-    <h1 v-if="!isGuest" class="text-center d-lg-flex justify-content-lg-center" style="margin-left: 4px;margin-top: 4vh;">Benvenuto {{nome}} {{cognome}}!</h1>
-    <h1 v-if="isGuest" class="text-center d-lg-flex justify-content-lg-center" style="margin-left: 4px;margin-top: 4vh;">Benvenuto ospite!</h1>
+    <h1 v-if="!isGuest" class="page-title text-center d-lg-flex justify-content-lg-center">Benvenuto {{nome}} {{cognome}}!</h1>
+    <h1 v-if="isGuest" class="page-title text-center d-lg-flex justify-content-lg-center">Benvenuto ospite!</h1>
 </div>
-<div id="materie" class="container" style="margin-top: 4vh;background: rgba(194,212,221,0.43);border-radius: 20px;padding-top: 2vh;border: 2px none var(--bs-body-color);">
-    <h4 class="text-start" style="margin-bottom: 2vh;">Seleziona una materia per cominciare:</h4>
-    <div class="row" style="margin-top: 2vh;">
+<div class="page-content">
+<div id="materie" class="container section" >
+    <h4 class="text-start">Seleziona una materia per cominciare:</h4>
+    <div class="row">
         <materia v-for="materia in materie" :key="materia.key" :id="materia.key" :name="materia.text"></materia>
     </div>
 </div>
 
-<div id="prenotazioni">
-    <div class="container" style="margin-top: 4vh;background: #c2d4dd;border-radius: 20px;padding-top: 2vh;border-width: 2px;border-style: none;">
-        <h4 class="text-start" style="margin-bottom: 2vh;">Le tue prenotazioni attive:</h4>
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                <tr style="background: rgba(0,0,0,0.10);">
-                    <th>Corso</th>
-                    <th>Docente</th>
-                    <th>Giorno</th>
-                    <th>Ora</th>
-                    <th>Opzioni</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="pren in prenotazioniAttive">
-                    <td>{{pren.corso}}</td>
-                    <td>{{pren.docente}}</td>
-                    <td>{{pren.giorno}}</td>
-                    <td>{{pren.ora}}</td>
-                    <td><i class="fa fa-check" style="color: var(--bs-success);height: 0;background: rgba(255,255,255,0);width: 0;font-size: 24px;"></i><i class="fa fa-trash" style="color: var(--bs-red);height: 0;background: rgba(255,255,255,0);width: 0;font-size: 24px;margin-left: 8vh;"></i></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="container" style="margin-top: 4vh;background: #c2d4dd;border-radius: 20px;padding-top: 2vh;margin-bottom: 20vh;border-width: 2px;border-style: none;">
-        <h4 class="text-start" style="margin-bottom: 2vh;">Le tue prenotazioni passate:<br></h4>
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                <tr style="background: rgba(0,0,0,0.10);">
-                    <th>Corso</th>
-                    <th>Docente</th>
-                    <th>Giorno</th>
-                    <th>Ora</th>
-                    <th>Stato</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="pren in prenotazioniPassate">
-                    <td>{{pren.corso}}</td>
-                    <td>{{pren.docente}}</td>
-                    <td>{{pren.giorno}}</td>
-                    <td>{{pren.ora}}</td>
-                    <td>{{pren.stato}}</td>
-                </tr>
-                </tbody>
-            </table>
+<div id="notify">
+    <div class="modal fade" role="dialog" tabindex="-1" id="modal">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header" >
+                    <h4 class="modal-title">{{modal.title}}</h4><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" >
+                    <p>{{modal.message}}</p>
+                </div>
+                <div class="modal-footer"><button v-on:click="closeModal()" class="btn btn-success" type="button" >Ok</button></div>
+            </div>
         </div>
     </div>
 </div>
-<br>
-<div id="footer">
-    <foot></foot>
+</div>
+<div id="vue-foot">
+    <myfoot />
 </div>
 <script src="assets/bootstrap/js/bootstrap.min.js"></script>
 <script src="assets/js/home.js"></script>
