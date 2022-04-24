@@ -31,21 +31,30 @@ Vue.component('mynav', {
             }else if(user.ruolo == "cliente"){
                 this.admin = false;
             }
+        },
+        logOut: function (){
+            $.get("Logout", function(data){
+                if (data != null) window.location.href = data.redirectPath;
+            });
+        },
+        redirect(page){
+            window.location.href = page;
         }
     },
     template: '<header>\n' +
         '    <h3>RIPETIZIONI</h3>\n' +
         '    <nav>\n' +
         '        <ul>\n' +
-        '            <li><a href="reservations.html">Pagina iniziale</a></li>\n' +
+        '            <li v-on:click="redirect(\'homepage.html\')"><a>Pagina iniziale</a></li>\n' +
         '            <li class="drop"><a>Materie</a>\n' +
         '                <ul>\n' +
         '                    <li v-for="materia in materie" :key="materia.key" ><a :href="\'corso.html?corso=\' + materia.text + \'&key=\' + materia.key">{{materia.text}}</a></li>\n' +
         '                </ul>\n' +
         '            </li>\n' +
-        '            <li v-if="admin != null"><a href="reservations.html">Le tue prenotazioni</a></li>\n' +
-        '            <li v-if="admin == null"><a href="index.html">Accedi</a></li>\n' +
-        '            <li v-if="admin == true"><a href="admin_panel.html">Amministratore</a></li>\n' +
+        '            <li v-if="admin != null" v-on:click="redirect(\'reservations.html\')"><a>Le tue prenotazioni</a></li>\n' +
+        '            <li v-if="admin == null" v-on:click="redirect(\'index.html\')"><a>Accedi</a></li>\n' +
+        '            <li v-if="admin == true" v-on:click="redirect(\'admin_panel.html\')"><a>Amministratore</a></li>\n' +
+        '            <li v-if="admin != null" v-on:click="logOut()"><a>Esci</a></li>\n' +
         '        </ul>\n' +
         '    </nav>\n' +
         '</header>'

@@ -29,7 +29,8 @@ new Vue({
         getUser: function (){
             var self = this;
             $.get("getData",{operation: 'getUserData'}, function(data){
-                if (data != null) self.isGuest=false;
+                if (data.status != 'ko') self.isGuest=false;
+
             });
         },
         getRipetizioni: function (key){

@@ -26,8 +26,11 @@
 <div class="page-content">
 <div id="materie" class="container section" >
     <h4 class="text-start">Seleziona una materia per cominciare:</h4>
-    <div class="row">
+    <div v-if="materie.length > 0" class="row">
         <materia v-for="materia in materie" :key="materia.key" :id="materia.key" :name="materia.text"></materia>
+    </div>
+    <div v-if="materie.length == 0" class="materie-placeholder">
+        Non ci sono corsi con ripetizioni disponibili al momento, prova a controllare più tardi.
     </div>
 </div>
 

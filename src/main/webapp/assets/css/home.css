@@ -50,3 +50,20 @@ body{
     white-space: pre-line;
 }
 
+.materiacontainer{
+    margin-bottom: 30px;
+    border-width: 2px;
+    border-style: none;
+}
+
+.materia{
+    height: 150px;
+    border-radius: 15px;
+    box-shadow: 4px 4px 6px rgba(33,37,41,0.56);
+    border-width: 2px;
+    border-style: none;
+}
+.materie-placeholder{
+    margin-bottom: 10px;
+}
+

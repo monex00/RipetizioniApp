@@ -16,7 +16,7 @@ Vue.component('materia', {
             window.location.href = "corso.html?corso=" + corso + "&key="+key;
         }
     },
-    template: '<div v-on:click="openMateria(name,id)"  class="col-md-3 d-sm-flex d-lg-flex justify-content-sm-start align-items-sm-start justify-content-lg-center align-items-lg-center justify-content-xl-start align-items-xl-start" style="min-width: 30vh;margin-bottom: 3vh;border-width: 2px;border-style: none;"> <div v-bind:style="{ background: colore}" class="d-flex d-sm-flex d-lg-flex flex-grow-1 flex-shrink-0 justify-content-center align-items-center justify-content-sm-center align-items-sm-center justify-content-lg-center align-items-lg-center justify-content-xl-center align-items-xl-center" style="height: 15vh;border-radius: 15px;box-shadow: 4px 4px 6px rgba(33,37,41,0.56);border-width: 2px;border-style: none;"> <h4 class="d-sm-flex d-lg-flex justify-content-sm-center align-items-sm-center justify-content-lg-start align-items-lg-start">{{name}}</h4></div></div>'
+    template: '<div v-on:click="openMateria(name,id)"  class="col-md-3 d-sm-flex d-lg-flex justify-content-sm-start align-items-sm-start justify-content-lg-center align-items-lg-center justify-content-xl-start align-items-xl-start materiacontainer"> <div v-bind:style="{ background: colore}" class="d-flex d-sm-flex d-lg-flex flex-grow-1 flex-shrink-0 justify-content-center align-items-center justify-content-sm-center align-items-sm-center justify-content-lg-center align-items-lg-center justify-content-xl-center align-items-xl-center materia"> <h4 class="d-sm-flex d-lg-flex justify-content-sm-center align-items-sm-center justify-content-lg-start align-items-lg-start">{{name}}</h4></div></div>'
 })
 
 new Vue({
@@ -25,7 +25,7 @@ new Vue({
         materie: [],
     },
     mounted(){
-        this.getMaterie()
+        //this.getMaterie()
     },
     methods:{
         getMaterie: function(){
@@ -88,9 +88,13 @@ new Vue({
                 if (data.length > 0){
                     console.log(JSON.stringify(data));
                     let message = '';
+                    let index = 1;
                     data.forEach(pren => {
-                        const raw = `- La tua ripetizione per ${pren.insegnamento.corso.nome} con il docente ${pren.insegnamento.docente.nome} ${pren.insegnamento.docente.cognome} per il giorno ${self.getDayByNumber(pren.insegnamento.giorno)} alle ore ${pren.insegnamento.ora} è stata marcata come ${pren.stato == 'E' ? 'eseguita' : 'disdetta'}`;
+                        let raw;
+                        if (pren.stato = 'A') raw = `${index}-È stata attivata una ripetizione per ${pren.insegnamento.corso.nome} con il docente ${pren.insegnamento.docente.nome} ${pren.insegnamento.docente.cognome} per il giorno ${self.getDayByNumber(pren.insegnamento.giorno)} alle ore ${pren.insegnamento.ora}`;
+                        else raw = `${index}- La tua ripetizione per ${pren.insegnamento.corso.nome} con il docente ${pren.insegnamento.docente.nome} ${pren.insegnamento.docente.cognome} per il giorno ${self.getDayByNumber(pren.insegnamento.giorno)} alle ore ${pren.insegnamento.ora} è stata marcata come ${pren.stato == 'E' ? 'eseguita' : 'disdetta'}`;
                         message += raw + '\n\n';
+                        index++;
                     });
                     console.log(message);
                     self.setModal("Nuovo Messaggio!", message);

@@ -43,7 +43,7 @@ new Vue({
                             docente: data[i].insegnamento.docente.nome + ' ' + data[i].insegnamento.docente.cognome,
                             giorno: self.getDayByNumber(data[i].insegnamento.giorno),
                             ora: data[i].insegnamento.ora,
-                            stato: data[i].stato
+                            stato: self.getStringStato(data[i].stato),
                         }
                         if (data[i].stato == 'A') {
                             self.prenotazioniAttive.push(prenotazione);
@@ -73,6 +73,16 @@ new Vue({
                     return "Giovedì";
                 case 5:
                     return "Venerdì";
+            }
+        },
+        getStringStato(stato){
+            switch (stato){
+                case 'A':
+                    return 'A';
+                case 'E':
+                    return "Eseguita";
+                case 'D':
+                    return "Disdetta";
             }
         },
         updatePrenotazione(id, stato){

@@ -52,7 +52,7 @@
                             <tr v-for="ripetizione in element.insegnamenti">
                                 <td>{{ripetizione.giorno}}</td>
                                 <td>{{ripetizione.ora}}</td>
-                                <td class="d-flex d-lg-flex d-xl-flex justify-content-center justify-content-lg-center justify-content-xl-center align-items-xl-center justify-content-xxl-center" style="padding: 8px;"><p v-if="!ripetizione.isAttivo && !isGuest">Sei già prenotato per questi giorno e ora!</p><p v-if="isGuest">Devi essere autenticato per poterti prenotare!</p><button v-if="ripetizione.isAttivo && !isGuest" v-on:click="prenota(ripetizione.id)" class="btn btn-success text-center" type="button" style="height: 5vh;padding: 0;width: 20vh;box-shadow: 2px 2px 4px 1px var(--bs-gray-600);">Prenota</button></td>
+                                <td class="d-flex d-lg-flex d-xl-flex justify-content-center justify-content-lg-center justify-content-xl-center align-items-xl-center justify-content-xxl-center" style="padding: 8px;"><p v-if="!ripetizione.isAttivo && !isGuest">Sei già prenotato per questi giorno e ora!</p><p v-if="isGuest">Devi essere autenticato per poterti prenotare!</p><button v-if="ripetizione.isAttivo && !isGuest" v-on:click="prenota(ripetizione.id)" class="btn btn-success text-center mybutt" type="button">Prenota</button></td>
                             </tr>
                             </tbody>
                         </table>

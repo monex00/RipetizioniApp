@@ -15,6 +15,7 @@ body{
     margin: 0;
     position: relative;
     min-height: 100vh;
+    background-color: #dedcdd;
 }
 
 .page-title{
@@ -34,27 +35,34 @@ body{
     border-radius: 10px;
     padding: 25px 25px 25px 15px;
     justify-content: center;
+    background-color: #f4f3f1;
+    box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
 }
 
 .mytab{
-    background: rgba(194,212,221,0.43);
     padding: 10px 20px 10px 20px;
-    border-radius: 10px 10px 0 0;
+    border-radius: 10px;
     font-size: 24px;
     font-weight: 600;
+    background-color: #f4f3f17a;
+    margin-left: 10px;
+    cursor: pointer;
 }
 
 .mytab:hover{
-    background: #75818b;
+    background: dimgrey;
 }
 
 .mytab.selected{
-    background: rgb(194, 212,221);
+    background-color: #f4f3f1;
+    box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
 }
 
 .mytabs{
     display: flex;
     justify-content: center;
+    margin-bottom: 25px;
+
 }
 
 button{
@@ -64,18 +72,18 @@ button{
 }
 
 button.red{
-    background-color: #ff605c;
+    background-color: #f44336;
 }
 button.red:hover{
-    background-color: #e55652;
+    background-color: #c3352b;
 }
 
 button.green{
-    background-color: #00ca4e;
+    background-color: #198754;
     margin-right: 10px;
 }
 
 
 button.green:hover{
-    background-color: #00b546;
+    background-color: #11603c;
 }

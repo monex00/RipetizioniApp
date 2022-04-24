@@ -14,6 +14,7 @@ body{
     margin: 0;
     position: relative;
     min-height: 100vh;
+    background-color: #dedcdd;
 }
 
 .page-title{
@@ -40,11 +41,20 @@ body{
 }
 
 .mycell{
-    background: #c2d4dd;
     border-radius: 20px;
     padding: 25px;
+    background-color: #f4f3f1;
+    box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+
 }
 
 .mycell h3 {
     margin-bottom: 25px;
+}
+
+.mybutt{
+    height: 5vh;
+    padding: 0;
+    width: 20vh;
+    box-shadow: 2px 2px 4px 1px var(--bs-gray-600);
 }

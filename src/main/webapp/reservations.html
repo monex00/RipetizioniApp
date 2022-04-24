@@ -11,7 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
-<body style="background: rgba(255,255,255,0.95);">
+<body>
 
 <div id="vue-nav">
     <mynav />
@@ -24,7 +24,7 @@
     <div class="modal fade" role="dialog" tabindex="-1" id="modal">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <div class="modal-header" style="background: #c2d4dd6e;">
+                <div class="modal-header">
                     <h4 class="modal-title">{{modal.title}}</h4><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" style="background: #c2d4dd6e;">
@@ -38,7 +38,7 @@
     <div id="attive_tab_button" onclick="selectAttive()" class="mytab selected">Attive</div><div onclick="selectPassate()" id="passate_tab_button" class="mytab">Passate</div>
     </div>
     <div class="container">
-    <div id="attive_tab" v-if="!guest" class="section" style="background: #c2d4dd;">
+    <div id="attive_tab" v-if="!guest" class="section">
         <h4 class="text-start">Le tue prenotazioni attive:</h4>
         <p v-if="zeroAttive">Non hai prenotazioni attive.</p>
         <div v-if="!zeroAttive" class="table-responsive">
@@ -64,7 +64,7 @@
             </table>
         </div>
     </div>
-    <div id="passate_tab" v-if="!guest" class="section" style="background: #c2d4dd; display: none">
+    <div id="passate_tab" v-if="!guest" class="section" style="display: none">
         <h4 class="text-start">Le tue prenotazioni passate:<br></h4>
         <p v-if="zeroPassate">Non hai prenotazioni passate.</p>
         <div v-if="!zeroPassate" class="table-responsive">
