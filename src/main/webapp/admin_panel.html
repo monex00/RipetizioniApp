@@ -8,25 +8,15 @@
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/global.css">
     <link rel="stylesheet" href="assets/css/admin_style.css">
+    <link rel="stylesheet" href="assets/css/nav-foot.css">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 
 <body onload="checkAdminRole()">
-    <nav class="navbar navbar-light navbar-expand-lg navigation-clean">
-        <div class="container"><a class="navbar-brand" href="#">Company Name</a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
-            <div class="collapse navbar-collapse" id="navcol-1">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link active" href="#" >First Item</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Second Item</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Third Item</a></li>
-                    <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">Dropdown </a>
-                        <div class="dropdown-menu"><a class="dropdown-item" href="#tab-1">Docenti</a><a class="dropdown-item" href="#tab-2" data-bs-target="#tab-2">Corsi</a><a class="dropdown-item" href="#tab-3" data-bs-target="#tab-3">Insegnamenti</a><a class="dropdown-item" href="#tab-4" data-bs-target="#tab-3">Prenotazioni</a></div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    <div id="vue-nav">
+        <mynav />
+    </div>
 
     <div id="admin_error" style="display: none" class="h-100 row align-items-center admin_error" >
         <div class="alert alert-danger" >
@@ -271,6 +261,7 @@
     </div>
 
     <script src="assets/js/admin_panel.js"></script>
+    <script src="assets/js/nav_footer.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
 </body>
 
