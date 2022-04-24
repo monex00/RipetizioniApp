@@ -1,5 +1,7 @@
 package dao;
 
+import utils.PasswordServices;
+
 import java.sql.*;
 
 public class DAO {
@@ -33,9 +35,8 @@ public class DAO {
         PreparedStatement statement = null;
         try {
             conn = getConnection();
-            statement = conn.prepareStatement("SELECT * FROM Utente WHERE Email = ? AND Password = ?");
+            statement = conn.prepareStatement("SELECT * FROM Utente WHERE Email = ? ");
             statement.setString(1, email);
-            statement.setString(2, password);
 
             ResultSet rs = statement.executeQuery();
             if(rs == null){
@@ -43,7 +44,10 @@ public class DAO {
             }
 
             if (rs.next()){
-                result = new Utente(rs.getInt("idUtente"), rs.getString("nome"), rs.getString("cognome"), rs.getString("email"), rs.getString("password"), rs.getString("ruolo"));
+                String encryptedPassword = rs.getString("password");
+                if(PasswordServices.checkSHA256(encryptedPassword, password)) {
+                    result = new Utente(rs.getInt("idUtente"), rs.getString("nome"), rs.getString("cognome"), rs.getString("email"), rs.getString("password"), rs.getString("ruolo"));
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();

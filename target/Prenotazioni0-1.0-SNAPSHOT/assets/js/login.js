@@ -11,12 +11,11 @@ new Vue({
     },
     methods:{
         log :function () {
-            let crypted = CryptoJS.SHA1(this.password);
             if(this.email && this.password){
                 var _this = this;
                 $.post(this.link ,{
                     email: this.email,
-                    password: this.password,//crypted.toString(),
+                    password: this.password,
                     remember: this.remember
                 }, function (data){
                     _this.redirectIfSuccess(data);
