@@ -1,15 +1,22 @@
 var index = -1;
-var colori = ['#77a8a8',"#b9b0b0", "#b0aac0","#e4d1d1"];
+var colori = ['#AE2012',"#0A9396", "#EE9B00","#E9D8A6", "#94D2BD", "#005F73", "#CA6702"];
 
 
 Vue.component('materia', {
     props: ['id','name'],
     data: function () {
+        //pick random
+        index = Math.floor(Math.random() * colori.length);
+        return {
+            colore: colori[index]
+        }
+        /*index = (index + 1) % colori.length;
         if (index == colori.length - 1) index = 0;
         else index++;
         return {
             colore: colori[index]
-        }
+
+        } */
     },
     methods:{
         openMateria: function (corso,key){
@@ -25,7 +32,7 @@ new Vue({
         materie: [],
     },
     mounted(){
-        //this.getMaterie()
+        this.getMaterie()
     },
     methods:{
         getMaterie: function(){

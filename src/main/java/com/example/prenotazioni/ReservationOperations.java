@@ -56,7 +56,7 @@ public class ReservationOperations extends HttpServlet {
                 return;
             }
 
-            if (!Prenotazione.addPrenotazioneToDB(Integer.parseInt(idUtente), Integer.parseInt(idInsegnamento), stato)) {
+            if (!Prenotazione.addPrenotazioneToDB(Integer.parseInt(idUtente), Integer.parseInt(idInsegnamento), stato,1)) {
                 Utils.sendMessage(pr, "ko", "Errore nell'aggiunta della prenotazione", "Errore");
                 pr.close();
                 return;
@@ -104,7 +104,7 @@ public class ReservationOperations extends HttpServlet {
                 pr.close();
                 return;
             }
-            if (!Prenotazione.addPrenotazioneToDB(id, Integer.parseInt(idInsegnamento), 'A')) {
+            if (!Prenotazione.addPrenotazioneToDB(id, Integer.parseInt(idInsegnamento), 'A', 0)) {
                 Utils.sendMessage(pr, "ko", "C'è stato un errore con la tua prenotazione, potrebbe non essere più disponibile, riprova.", "Errore");
                 pr.close();
                 return;

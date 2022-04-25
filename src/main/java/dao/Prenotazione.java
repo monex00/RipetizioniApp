@@ -36,7 +36,7 @@ public class Prenotazione {
         return insegnamento;
     }
 
-    public static boolean addPrenotazioneToDB(int idUtente, int idInsegnamento, char stato){
+    public static boolean addPrenotazioneToDB(int idUtente, int idInsegnamento, char stato, int toNotify){
         Connection conn = DAO.getConnection();
         Boolean res = true;
         PreparedStatement prStatement = null;
@@ -57,6 +57,16 @@ public class Prenotazione {
             //TODO:COMPATTARE IN UNICA QUERY
 
             //controllo se utente ha già una prenotazione in quel giorno e ora
+            prStatement = conn != null ? conn.prepareStatement("SELECT * FROM prenotazione WHERE idInsegnamento = ? AND stato = 'A'") : null;
+            if(prStatement != null) {
+                prStatement.setInt(1, idInsegnamento);
+                ResultSet rs = prStatement.executeQuery();
+
+                if(rs.next()) {
+                    return false;
+                }
+            }
+
             int ora = 0;
             int giorno = 0;
             prStatement = conn != null ? conn.prepareStatement("SELECT Ora, Giorno FROM insegnamento WHERE idInsegnamento = ?") : null;
@@ -86,11 +96,12 @@ public class Prenotazione {
             //String query3 = "SELECT idInsegnamento FROM Insegnamento WHERE idDocente"
 
             prStatement = conn != null ? conn.prepareStatement("INSERT INTO Prenotazione(idUtente, idInsegnamento, stato, toNotify) " +
-                    "VALUES ((?), (?), ?, 1 )") : null;
+                    "VALUES ((?), (?), ?, ? )") : null;
             if(prStatement != null) {
                 prStatement.setInt(1, idUtente);
                 prStatement.setInt(2, idInsegnamento);
                 prStatement.setString(3, Character.toString(stato));
+                prStatement.setInt(4, toNotify);
             }
             prStatement.executeUpdate();
         } catch (SQLException e) {
