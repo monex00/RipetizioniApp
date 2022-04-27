@@ -75,7 +75,15 @@ new Vue({
 
     methods:{
         add : function (){
-            if(this.addTeacher.name || this.addTeacher.surname){
+            if(this.addTeacher.name && this.addTeacher.surname){
+                for(let i = 0; i < this.getTeacherData.teachers.length; i++){
+                    if(this.getTeacherData.teachers[i].nome === this.addTeacher.name && this.getTeacherData.teachers[i].cognome === this.addTeacher.surname){
+                        this.modal_message = "L'insegnante è già presente nel database";
+                        this.modal_title = "Insegnante già presente";
+                        this.showModal();
+                        return;
+                    }
+                }
                 createPostRequest(this.link,{entity: this.entity,
                     name: this.addTeacher.name,
                     surname: this.addTeacher.surname,
@@ -84,6 +92,9 @@ new Vue({
                     if(data.status === "ok") {
                         this.addTeacher.message = data.message;
                         this.addTeacher.show = true;
+                        setTimeout(() => {
+                            this.addTeacher.show = false;
+                        }, 3000);
                         this.addTeacher.name = '';
                         this.addTeacher.surname = '';
                         this.getTeachers();
@@ -93,6 +104,10 @@ new Vue({
                         this.showModal();
                     }
                 });
+            }else{
+                this.modal_message = "Inserire nome e cognome";
+                this.modal_title = "Errore";
+                this.showModal();
             }
         },
 
@@ -107,11 +122,13 @@ new Vue({
                 if(data.status === "ok"){
                     this.removeTeacher.show = true;
                     this.removeTeacher.message = data.message;
+                    setTimeout(() => {
+                        this.removeTeacher.show = false;
+                    }, 3000);
 
                     for(var i = 0; i < this.getTeacherData.teachers.length; i++){
                         if(this.getTeacherData.teachers[i].nome === teacher.nome && this.getTeacherData.teachers[i].cognome === teacher.cognome){
                             this.getTeacherData.teachers.splice(i, 1);
-
                         }
                     }
                     EventBus.$emit('teacher_removed', this.getTeacherData.teachers);
@@ -175,8 +192,16 @@ new Vue({
     },
 
     methods:{
-        add :  function (){
+        add : function (){
             if(this.addCourse.name) {
+                for(let i = 0; i < this.getCourseData.courses.length; i++){
+                    if(this.getCourseData.courses[i].nome === this.addCourse.name){
+                        this.modal_message = "Il corso è già presente nel database";
+                        this.modal_title = "Corso già presente";
+                        this.showModal();
+                        return;
+                    }
+                }
                 createPostRequest(this.link, {
                     name: this.addCourse.name,
                     operation: this.addCourse.operation,
@@ -186,6 +211,9 @@ new Vue({
                         this.addCourse.show = true;
                         this.addCourse.message = data.message;
                         this.addCourse.name = '';
+                        setTimeout(() => {
+                            this.addCourse.show = false;
+                        }, 3000);
                         this.getCourses();
                     }else{
                         this.modal_message = data.message;
@@ -194,6 +222,10 @@ new Vue({
                         this.showModal();
                     }
                 });
+            }else{
+                this.modal_message = "Inserire il nome del corso";
+                this.modal_title = "Errore";
+                this.showModal();
             }
         },
 
@@ -208,6 +240,9 @@ new Vue({
                     if(data.status === "ok"){
                         this.removeCourse.show = true;
                         this.removeCourse.message = data.message;
+                        setTimeout(() => {
+                            this.removeCourse.show = false;
+                        }, 3000);
                         for(let i = 0; i < this.getCourseData.courses.length; i++){
                             if(this.getCourseData.courses[i].nome === course.nome){
                                 this.getCourseData.courses.splice(i, 1);
@@ -354,6 +389,9 @@ new Vue({
                     if(data.status === "ok"){
                         this.addTeachingData.show = true;
                         this.addTeachingData.message = data.message;
+                        setTimeout(() => {
+                            this.addTeachingData.show = false;
+                        }, 3000);
                         this.getTeachingList();
                         this.addTeachingData.docente = '';
                         this.addTeachingData.corso = '';
@@ -387,6 +425,9 @@ new Vue({
                 if(data.status === "ok"){
                     this.removeTeachingData.show = true;
                     this.removeTeachingData.message = data.message;
+                    setTimeout(() => {
+                        this.removeTeachingData.show = false;
+                    }, 3000);
                     this.getTeachingList();
                 }else{
                     this.modal_message = data.message;
@@ -574,6 +615,9 @@ new Vue({
                 if(data.status === "ok"){
                     this.addReservationData.show = true;
                     this.addReservationData.message = data.message;
+                    setTimeout(() => {
+                        this.addReservationData.show = false;
+                    }, 3000);
 
                     this.addReservationData.utente = '';
                     this.addReservationData.insegnamento = '';
@@ -626,6 +670,9 @@ new Vue({
                 if (data.status === "ok") {
                     this.updateReservationData.show = true;
                     this.updateReservationData.message = data.message;
+                    setTimeout(() => {
+                        this.updateReservationData.show = false;
+                    }, 3000);
                     this.getReservationList();
                     this.getAvailableTeaching();
                 }else{

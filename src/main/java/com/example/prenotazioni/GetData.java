@@ -51,17 +51,38 @@ public class GetData extends HttpServlet {
                 return;
             }
         }else if(operation.equals("getTeachers")) {
-            ArrayList<Docente> docenti = Docente.getDocenti();
-            pr.write(new Gson().toJson(docenti));
-            System.out.println("DOCENTI:" + new Gson().toJson(docenti));
-            pr.flush();
-            pr.close();
+            HttpSession session = request.getSession();
+            if(session.getAttribute("id") != null && Utils.checkStatus(session.getAttribute("id"), "admin")){
+                ArrayList<Docente> docenti = Docente.getDocenti();
+                pr.write(new Gson().toJson(docenti));
+                System.out.println("DOCENTI:" + new Gson().toJson(docenti));
+                pr.flush();
+                pr.close();
+                return;
+            }else {
+                RedirectMessage rm = new RedirectMessage("ko", "Non sei loggato", "/index.html");
+                pr.println(new Gson().toJson(rm));
+                pr.flush();
+                pr.close();
+                return;
+            }
+
         }else if(operation.equals("getCourses")){
-            ArrayList<Corso> corsi = Corso.getCorsi();
-            pr.write(new Gson().toJson(corsi));
-            System.out.println("CORSI:" +  new Gson().toJson(corsi));
-            pr.flush();
-            pr.close();
+            HttpSession session = request.getSession();
+            if(session.getAttribute("id") != null && Utils.checkStatus(session.getAttribute("id"), "admin")){
+                ArrayList<Corso> corsi = Corso.getCorsi();
+                pr.write(new Gson().toJson(corsi));
+                System.out.println("CORSI:" +  new Gson().toJson(corsi));
+                pr.flush();
+                pr.close();
+                return;
+            }else {
+                RedirectMessage rm = new RedirectMessage("ko", "Non sei loggato", "/index.html");
+                pr.println(new Gson().toJson(rm));
+                pr.flush();
+                pr.close();
+                return;
+            }
         }else if(operation.equals("getCoursesWithTeaching")){
             ArrayList<Corso> corsi = Corso.getCorsiConInsegnamenti();
             pr.write(new Gson().toJson(corsi));
@@ -69,23 +90,51 @@ public class GetData extends HttpServlet {
             pr.flush();
             pr.close();
         }else if(operation.equals("getTeaching")){
-            ArrayList<Insegnamento> insegnamenti = Insegnamento.getInsegnamenti();
-            System.out.println("INSEGNAMENTI" + new Gson().toJson(insegnamenti));
-            pr.write(new Gson().toJson(insegnamenti));
-            pr.flush();
-            pr.close();
+            HttpSession session = request.getSession();
+            if(session.getAttribute("id") != null && Utils.checkStatus(session.getAttribute("id"), "admin")){
+                ArrayList<Insegnamento> insegnamenti = Insegnamento.getInsegnamenti();
+                System.out.println("INSEGNAMENTI" + new Gson().toJson(insegnamenti));
+                pr.write(new Gson().toJson(insegnamenti));
+                pr.flush();
+                pr.close();
+                return;
+            }else {
+                RedirectMessage rm = new RedirectMessage("ko", "Non sei loggato", "/index.html");
+                pr.println(new Gson().toJson(rm));
+                pr.flush();
+                pr.close();
+                return;
+            }
         }else if(operation.equals("getUsers")){
-            ArrayList<Utente> utenti = Utente.getUtenti();
-            System.out.println("UTENTI:" +new Gson().toJson(utenti));
-            pr.write(new Gson().toJson(utenti));
-            pr.flush();
-            pr.close();
+            HttpSession session = request.getSession();
+            if(session.getAttribute("id") != null && Utils.checkStatus(session.getAttribute("id"), "admin")){
+                ArrayList<Utente> utenti = Utente.getUtenti();
+                System.out.println("UTENTI:" +new Gson().toJson(utenti));
+                pr.write(new Gson().toJson(utenti));
+                pr.flush();
+                pr.close();
+            }else {
+                RedirectMessage rm = new RedirectMessage("ko", "Non sei loggato", "/index.html");
+                pr.println(new Gson().toJson(rm));
+                pr.flush();
+                pr.close();
+                return;
+            }
         }else if(operation.equals("getReservation")){
-            ArrayList<Prenotazione> prenotazioni = Prenotazione.getPrenotazioni();
-            System.out.println("PRENOTAZIONI" + new Gson().toJson(prenotazioni));
-            pr.write(new Gson().toJson(prenotazioni));
-            pr.flush();
-            pr.close();
+            HttpSession session = request.getSession();
+            if(session.getAttribute("id") != null && Utils.checkStatus(session.getAttribute("id"), "admin")){
+                ArrayList<Prenotazione> prenotazioni = Prenotazione.getPrenotazioni();
+                System.out.println("PRENOTAZIONI" + new Gson().toJson(prenotazioni));
+                pr.write(new Gson().toJson(prenotazioni));
+                pr.flush();
+                pr.close();
+            }else {
+                RedirectMessage rm = new RedirectMessage("ko", "Non sei loggato", "/index.html");
+                pr.println(new Gson().toJson(rm));
+                pr.flush();
+                pr.close();
+                return;
+            }
         }else if(operation.equals("getAvailableTeaching")){
             ArrayList<Insegnamento> insegnamenti = Insegnamento.getInsegnamentiDisponibili();
             System.out.println("INSEGNAMENTI DISPONIBILI:" + new Gson().toJson(insegnamenti));
