@@ -151,7 +151,7 @@ public class GetData extends HttpServlet {
                 user = null;
             }
 
-            pr.write(Insegnamento.getInsegnamentiDaIdMateria(request.getParameter("id"),user));
+            pr.write(new Gson().toJson(Insegnamento.getInsegnamentiDaIdMateria(request.getParameter("id"),user)));
             pr.flush();
             pr.close();
         }else if (operation.equals("getMyReservations")){

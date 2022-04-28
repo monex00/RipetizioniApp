@@ -354,7 +354,7 @@ new Vue({
                     console.log("2: " + ( this.teachingList[i].giorno === convertInDay(parseInt(this.addTeachingData.giorno.substring(0,1)))) + " " + this.teachingList[i].giorno + " " + this.addTeachingData.giorno);
                     console.log("3: " + Math.round(Math.abs(this.teachingList[i].ora - this.addTeachingData.ora)) + " " + Number(this.teachingList[i].ora).toFixed(2)  + " " + Number(this.addTeachingData.ora));*/
 
-                    if((this.teachingList[i].docente.id).toString() === this.addTeachingData.docente.split('|')[0] && this.teachingList[i].giorno === convertInDay(parseInt(this.addTeachingData.giorno.substring(0,1))) && Math.round(Math.abs(this.teachingList[i].ora - this.addTeachingData.ora)) < 1){
+                    if((this.teachingList[i].docente.id).toString() === this.addTeachingData.docente.split('|')[0] && this.teachingList[i].giorno === convertInDay(parseInt(this.addTeachingData.giorno.substring(0,1))) && Math.round(Math.abs(this.teachingList[i].ora - this.addTeachingData.ora)) < 1 && this.addTeachingData.corso.split('|')[1] === this.teachingList[i].corso.nome){
                         this.modal_title = "Attenzione!";
                         this.modal_message = "Un insegnamento dello stesso professore è già presente in questo orario o non è a distanza di 1 ora dall'orario inserito";
                         this.showModal();
@@ -595,6 +595,22 @@ new Vue({
                             console.log("ok");
                             this.showModal()
                             return false;
+                    }
+
+                    let insegnanteUguale = false;
+                    let insegnante1 = this.addReservationData.insegnamento.split('|')[1] + " " + this.addReservationData.insegnamento.split('|')[2]
+                    let insegnante2 = this.reservationList[i].insegnamento.docente.nome + " " + this.reservationList[i].insegnamento.docente.cognome
+
+                    if(insegnante1 === insegnante2){
+                        console.log("insegnante uguale");
+                        insegnanteUguale = true;
+                    }
+                    if(statoA && giornoUguale && oraUguale && insegnanteUguale){
+                        this.modal_message = "L'insegnante ha gia' una prenotazione attiva per questo giorno e ora";
+                        this.modal_title = "Attenzione";
+                        console.log("ok");
+                        this.showModal()
+                        return false;
                     }
                 }
             }

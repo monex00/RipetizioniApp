@@ -81,10 +81,11 @@ public class Insegnamento{
 
         try {
             //evito di inserire insegnameno dello stesso docente nello stesso giorno non a distanza di 1 ora
-            prStatement = conn != null ? conn.prepareStatement("SELECT ora FROM insegnamento WHERE idDocente = ? AND giorno = ? AND isAttivo=1") : null;
+            prStatement = conn != null ? conn.prepareStatement("SELECT ora FROM insegnamento WHERE idDocente = ? AND giorno = ? AND isAttivo=1 AND idCorso = ?") : null;
             if(prStatement != null) {
                 prStatement.setInt(1, idDocente);
                 prStatement.setInt(2, giorno);
+                prStatement.setInt(3, idCorso);
                 ResultSet rs = prStatement.executeQuery();
                 while(rs.next()){
                     if(Math.abs(rs.getFloat("ora") - ora) < 1){
@@ -217,7 +218,7 @@ public class Insegnamento{
         return insegnamenti;
     }
 
-    public static String getInsegnamentiDaIdMateria(String id, Utente user){
+    public static ArrayList<InsegnamentiDaIdMateria.InsegnamentiPerDocente> getInsegnamentiDaIdMateria(String id, Utente user){
         System.out.println("ID PROVA: " + user);
         Connection conn = DAO.getConnection();
         PreparedStatement prStatement = null;
@@ -248,25 +249,25 @@ public class Insegnamento{
             DAO.closeConnection(conn, prStatement);
         }
 
-        if (user != null) insegnamenti.removeNotAllowedDayHour(user);
+        insegnamenti.removeNotAllowedDayHour(user);
 
-        return new Gson().toJson(insegnamenti.insegnamenti);
+        return insegnamenti.insegnamenti;
     }
 
-    private static class InsegnamentiDaIdMateria {
+    public static class InsegnamentiDaIdMateria {
         private ArrayList<InsegnamentiPerDocente> insegnamenti;
 
         public InsegnamentiDaIdMateria() {
             this.insegnamenti = new ArrayList<>();
         }
 
-        public void addInsegnamento(Insegnamento i){
+        public void addInsegnamento(Insegnamento i) {
             boolean there_is = false;
-            for (InsegnamentiPerDocente in: insegnamenti) {
+            for (InsegnamentiPerDocente in : insegnamenti) {
                 if (in.getDocente().equals(i.getDocente())) {
                     System.out.println("trovato");
                     in.addInsegnamento(i);
-                    there_is =  true;
+                    there_is = true;
                 }
             }
             if (!there_is) {
@@ -278,21 +279,31 @@ public class Insegnamento{
         }
 
         public void removeNotAllowedDayHour(Utente user) {
-            ArrayList<Prenotazione> prenotazioni = Prenotazione.getPrenotazioniDaUtente(user);
-            for (InsegnamentiPerDocente insDoc: insegnamenti) {
-                for (Insegnamento ins: insDoc.insegnamenti) {
-                    for (Prenotazione pren: prenotazioni) {
-                        if (pren.getStato() == 'A'){
-                            if (pren.getInsegnamento().getGiorno() == ins.getGiorno() && pren.getInsegnamento().getOra() == ins.getOra()){
-                                ins.setAttivo(false);
+            ArrayList<Prenotazione> prenotazioniTutte = Prenotazione.getPrenotazioni();
+            for (InsegnamentiPerDocente insDoc : insegnamenti) {
+                for (Insegnamento ins : insDoc.insegnamenti) {
+                    if (user != null) {
+                        for (Prenotazione pren : Prenotazione.getPrenotazioniDaUtente(user)) {
+                            if (pren.getStato() == 'A') {
+                                if (pren.getInsegnamento().getGiorno() == ins.getGiorno() && pren.getInsegnamento().getOra() == ins.getOra()) {
+                                    ins.setAttivo(false);
+                                }
                             }
                         }
                     }
+                    for (Prenotazione pren : prenotazioniTutte) {
+                        if (pren.getStato() == 'A' && pren.getInsegnamento().getGiorno() == ins.getGiorno() && pren.getInsegnamento().getOra() == ins.getOra() && pren.getInsegnamento().getDocente().getId() == ins.getDocente().getId() && pren.getInsegnamento().getCorso() != ins.getCorso()) {
+                            System.out.println("Rimuovo" + insDoc.insegnamenti.indexOf(ins));
+
+                            insDoc.insegnamenti.remove(ins);
+                        }
+                    }
                 }
+                if (insDoc.insegnamenti.size() == 0) insegnamenti.remove(insDoc);
             }
         }
 
-        private static class InsegnamentiPerDocente {
+        public static class InsegnamentiPerDocente {
             private Docente docente;
             private ArrayList<Insegnamento> insegnamenti;
 
@@ -311,6 +322,10 @@ public class Insegnamento{
 
             public void setDocente(Docente docente) {
                 this.docente = docente;
+            }
+
+            public ArrayList<Insegnamento> getInsegnamenti() {
+                return insegnamenti;
             }
         }
     }

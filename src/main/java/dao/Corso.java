@@ -1,5 +1,7 @@
 package dao;
 
+import com.google.gson.Gson;
+
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -128,6 +130,20 @@ public class Corso {
                     corsi.add(new Corso(rs.getInt("idCorso"), rs.getString("Titolo"), rs.getBoolean("isAttivo")));
                 }
             }
+
+            for (Corso c: corsi) {
+                boolean toRevove = true;
+                ArrayList<Insegnamento.InsegnamentiDaIdMateria.InsegnamentiPerDocente> ins = Insegnamento.getInsegnamentiDaIdMateria(String.valueOf(c.getId()), null);
+                for (Insegnamento.InsegnamentiDaIdMateria.InsegnamentiPerDocente i: ins) {
+                    if (i.getInsegnamenti().size() > 0) {
+                        toRevove = false;
+                        System.out.println("non è da togliere");
+                    }
+
+                }
+                if (toRevove) corsi.remove(c);
+            }
+
 
         } catch (SQLException e) {
             e.printStackTrace();
