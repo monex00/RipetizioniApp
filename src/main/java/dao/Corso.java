@@ -139,7 +139,6 @@ public class Corso {
                         toRevove = false;
                         System.out.println("non è da togliere");
                     }
-
                 }
                 if (toRevove) corsi.remove(c);
             }

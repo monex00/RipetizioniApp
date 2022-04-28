@@ -280,7 +280,9 @@ public class Insegnamento{
 
         public void removeNotAllowedDayHour(Utente user) {
             ArrayList<Prenotazione> prenotazioniTutte = Prenotazione.getPrenotazioni();
+            ArrayList<Integer> toRemove = new ArrayList<>();
             for (InsegnamentiPerDocente insDoc : insegnamenti) {
+                ArrayList<Integer> toRem = new ArrayList<>();
                 for (Insegnamento ins : insDoc.insegnamenti) {
                     if (user != null) {
                         for (Prenotazione pren : Prenotazione.getPrenotazioniDaUtente(user)) {
@@ -291,15 +293,23 @@ public class Insegnamento{
                             }
                         }
                     }
+
                     for (Prenotazione pren : prenotazioniTutte) {
                         if (pren.getStato() == 'A' && pren.getInsegnamento().getGiorno() == ins.getGiorno() && pren.getInsegnamento().getOra() == ins.getOra() && pren.getInsegnamento().getDocente().getId() == ins.getDocente().getId() && pren.getInsegnamento().getCorso() != ins.getCorso()) {
                             System.out.println("Rimuovo" + insDoc.insegnamenti.indexOf(ins));
-
-                            insDoc.insegnamenti.remove(ins);
+                            toRem.add(insDoc.insegnamenti.indexOf(ins));
                         }
                     }
+
+
                 }
-                if (insDoc.insegnamenti.size() == 0) insegnamenti.remove(insDoc);
+                for (Integer i: toRem) {
+                    insDoc.insegnamenti.remove(i.intValue());
+                }
+                if (insDoc.insegnamenti.size() == 0) toRemove.add(insegnamenti.indexOf(insDoc));
+            }
+            for (Integer i : toRemove) {
+                insegnamenti.remove(i.intValue());
             }
         }
 
