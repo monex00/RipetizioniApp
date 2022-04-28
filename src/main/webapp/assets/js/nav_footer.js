@@ -63,7 +63,7 @@ new Vue({el:"#vue-nav"})
 
 Vue.component('myfoot', {
     template: '<div class="text-center d-xl-flex justify-content-xl-center align-items-xl-center footer">' +
-        '    <p><br>®Parola di Francesco Amadori</p>\n' +
+        '    <p><br>®Sito realizzato da Simone Multari e Loris Signoretti</p>\n' +
         '</div>'
 })
 

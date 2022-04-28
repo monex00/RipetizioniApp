@@ -131,7 +131,7 @@ public class ReservationOperations extends HttpServlet {
                 pr.close();
                 return;
             }
-            Utils.sendMessage(pr, "ko", "Operazione avvenuta con successo.", "Successo");
+            Utils.sendMessage(pr, "ok", "Operazione avvenuta con successo.", "Successo");
             pr.close();
         }
     }
