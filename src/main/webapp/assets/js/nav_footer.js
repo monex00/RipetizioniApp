@@ -11,7 +11,7 @@ Vue.component('mynav', {
     methods:{
         getMaterie: function(){
             let self = this;
-            $.get('getData',{operation: 'getCourses'}, function(data) {
+            $.get('getData',{operation: 'getCoursesWithTeaching'}, function(data) {
                 console.log(JSON.stringify(data));
                 for (let i = 0; i < data.length ; i++){
                     mat.push({key:data[i].id, text: data[i].nome});

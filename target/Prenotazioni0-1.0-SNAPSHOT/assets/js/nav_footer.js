@@ -11,7 +11,7 @@ Vue.component('mynav', {
     methods:{
         getMaterie: function(){
             let self = this;
-            $.get('getData',{operation: 'getCourses'}, function(data) {
+            $.get('getData',{operation: 'getCoursesWithTeaching'}, function(data) {
                 console.log(JSON.stringify(data));
                 for (let i = 0; i < data.length ; i++){
                     mat.push({key:data[i].id, text: data[i].nome});
@@ -63,7 +63,7 @@ new Vue({el:"#vue-nav"})
 
 Vue.component('myfoot', {
     template: '<div class="text-center d-xl-flex justify-content-xl-center align-items-xl-center footer">' +
-        '    <p><br>®Parola di Francesco Amadori</p>\n' +
+        '    <p><br>®Sito realizzato da Simone Multari e Loris Signoretti</p>\n' +
         '</div>'
 })
 
