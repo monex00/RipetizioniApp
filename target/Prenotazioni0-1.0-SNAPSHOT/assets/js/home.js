@@ -1,5 +1,5 @@
 var index = -1;
-var colori = ['#77a8a8',"#b9b0b0", "#b0aac0","#e4d1d1"];
+var colori = ['#77a8a8',"#b9b0b0", "#b0aac0","#e4d1d1","#a8a877","#778fa8","#a877a8","#a87777","#77a890"];
 
 
 Vue.component('materia', {
@@ -90,9 +90,13 @@ new Vue({
                     let message = '';
                     let index = 1;
                     data.forEach(pren => {
+                        console.log("nuova notifica " + pren.stato);
                         let raw;
-                        if (pren.stato = 'A') raw = `${index}-È stata attivata una ripetizione per ${pren.insegnamento.corso.nome} con il docente ${pren.insegnamento.docente.nome} ${pren.insegnamento.docente.cognome} per il giorno ${self.getDayByNumber(pren.insegnamento.giorno)} alle ore ${pren.insegnamento.ora}`;
-                        else raw = `${index}- La tua ripetizione per ${pren.insegnamento.corso.nome} con il docente ${pren.insegnamento.docente.nome} ${pren.insegnamento.docente.cognome} per il giorno ${self.getDayByNumber(pren.insegnamento.giorno)} alle ore ${pren.insegnamento.ora} è stata marcata come ${pren.stato == 'E' ? 'eseguita' : 'disdetta'}`;
+                        if (pren.stato == 'A') {
+                            raw = `${index}-È stata attivata una ripetizione per ${pren.insegnamento.corso.nome} con il docente ${pren.insegnamento.docente.nome} ${pren.insegnamento.docente.cognome} per il giorno ${self.getDayByNumber(pren.insegnamento.giorno)} alle ore ${pren.insegnamento.ora}`;
+                        }else {
+                            raw = `${index}- La tua ripetizione per ${pren.insegnamento.corso.nome} con il docente ${pren.insegnamento.docente.nome} ${pren.insegnamento.docente.cognome} per il giorno ${self.getDayByNumber(pren.insegnamento.giorno)} alle ore ${pren.insegnamento.ora} è stata marcata come ${pren.stato == 'E' ? 'eseguita' : 'disdetta'}`;
+                        }
                         message += raw + '\n\n';
                         index++;
                     });
